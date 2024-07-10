@@ -21,6 +21,7 @@ class JoiningPointHandler implements JoiningPointsAPI {
 
     @Override
     public ResponseEntity<JoiningPointsDto> create(JoiningPointsDto joiningPointsDto) {
+        joiningPointsDto.setIsActive(true);
         return ResponseEntity.ok(joiningPointMapper.toDto(joiningPointService.save(joiningPointMapper.toEntity(joiningPointsDto))));
     }
 

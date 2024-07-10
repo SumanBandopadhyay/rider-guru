@@ -2,6 +2,8 @@ package com.riderguru.rider_guru.gateway;
 
 import com.riderguru.rider_guru.itinerary.ItineraryAPI;
 import com.riderguru.rider_guru.itinerary.ItineraryDto;
+import com.riderguru.rider_guru.joining_points.JoiningPointsAPI;
+import com.riderguru.rider_guru.joining_points.JoiningPointsDto;
 import com.riderguru.rider_guru.trips.TripDto;
 import com.riderguru.rider_guru.trips.TripsAPI;
 import com.riderguru.rider_guru.users.UserDto;
@@ -20,11 +22,13 @@ public class GatewayHandler {
     private final UsersAPI usersAPI;
     private final TripsAPI tripsAPI;
     private final ItineraryAPI itineraryAPI;
+    private final JoiningPointsAPI joiningPointsAPI;
 
-    public GatewayHandler(UsersAPI usersAPI, TripsAPI tripsAPI, ItineraryAPI itineraryAPI) {
+    public GatewayHandler(UsersAPI usersAPI, TripsAPI tripsAPI, ItineraryAPI itineraryAPI, JoiningPointsAPI joiningPointsAPI) {
         this.usersAPI = usersAPI;
         this.tripsAPI = tripsAPI;
         this.itineraryAPI = itineraryAPI;
+        this.joiningPointsAPI = joiningPointsAPI;
     }
 
     @PostMapping("/users/create")
@@ -85,6 +89,26 @@ public class GatewayHandler {
     @DeleteMapping("/itinerary/delete")
     public ResponseEntity<ItineraryDto> deleteItinerary(@RequestParam("itinerary-id") Long itineraryId) {
         return itineraryAPI.delete(itineraryId);
+    }
+
+    @PostMapping("/joining_points/create")
+    public ResponseEntity<JoiningPointsDto> createJoiningPoints(@Valid @RequestBody JoiningPointsDto joiningPointsDto) {
+        return joiningPointsAPI.create(joiningPointsDto);
+    }
+
+    @GetMapping("/joining_points/query")
+    public ResponseEntity<List<JoiningPointsDto>> queryJoiningPoints(@RequestParam(required = false) Map<String, String> params) {
+        return joiningPointsAPI.query(params);
+    }
+
+    @GetMapping("/joining_points/all")
+    public ResponseEntity<List<JoiningPointsDto>> getAllJoiningPoints() {
+        return joiningPointsAPI.getAll();
+    }
+
+    @DeleteMapping("/joining_points/delete")
+    public ResponseEntity<JoiningPointsDto> deleteJoiningPoints(@RequestParam("joining-point-id") Long joiningPointId) {
+        return joiningPointsAPI.delete(joiningPointId);
     }
 
 }
