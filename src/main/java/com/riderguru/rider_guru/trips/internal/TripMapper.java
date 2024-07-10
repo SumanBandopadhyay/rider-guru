@@ -7,5 +7,5 @@ import org.mapstruct.Mapper;
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Mapper(componentModel = SPRING)
-public interface TripMapper extends GenericMapper<Trip, TripDto> {
+interface TripMapper extends GenericMapper<Trip, TripDto> {
 }

@@ -3,8 +3,11 @@ package com.riderguru.rider_guru.trips.internal;
 import com.riderguru.rider_guru.libs.GenericService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -12,7 +15,7 @@ import java.util.Optional;
 @Transactional
 @Slf4j
 @Service
-public class TripService implements GenericService<Trip> {
+class TripService implements GenericService<Trip> {
 
     private final TripRepository tripRepository;
 
@@ -38,15 +41,36 @@ public class TripService implements GenericService<Trip> {
 
     @Override
     public void delete(Long id) {
+        log.info("Delete trip id : {}", id);
+        tripRepository.deleteById(id);
+        log.info("Delete of trip id : {} complete", id);
     }
 
     @Override
     public List<Trip> getAll() {
-        return List.of();
+        log.info("Listing all Trip");
+        List<Trip> tripList = tripRepository.findAll();
+        log.info("Total list size : {}", tripList.size());
+        return tripList;
     }
 
     @Override
     public List<Trip> query(Map<String, String> params) {
-        return List.of();
+        log.info("Trips query : {}", params.toString());
+        if (params.isEmpty()) {
+            log.info("No criteria provided");
+            return Collections.emptyList();
+        }
+        Specification<Trip> spec = Specification.where(TripSpecification.hasTitle(params.get("title")))
+                .and(TripSpecification.hasStartPointName(params.get("startPointName")))
+                .and(TripSpecification.hasEndPointName(params.get("endPointName")))
+                .and(TripSpecification.hasScheduledStartTime(LocalDateTime.parse(params.get("scheduledStartTime"))))
+                .and(TripSpecification.hasActualStartTime(LocalDateTime.parse(params.get("actualStartTime"))))
+                .and(TripSpecification.hasScheduledEndTime(LocalDateTime.parse(params.get("scheduledEndTime"))))
+                .and(TripSpecification.hasActualEndTime(LocalDateTime.parse(params.get("actualEndTime"))))
+                .and(TripSpecification.isActive(Boolean.getBoolean(params.get("isActive"))));
+        List<Trip> trips = tripRepository.findAll(spec);
+        log.info("Trips found : {}", trips.size());
+        return trips;
     }
 }

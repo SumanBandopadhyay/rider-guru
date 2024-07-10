@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name = "trips")
-public class Trip {
+class Trip {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,7 +26,7 @@ public class Trip {
     private String startLocMap;
     @Column(name = "end_point_name")
     private String endPointName;
-    @Column(name = "end_point_map")
+    @Column(name = "end_loc_map")
     private String endLocMap;
     @Column(name = "scheduled_start_time")
     private LocalDateTime scheduledStartTime;

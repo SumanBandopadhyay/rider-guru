@@ -21,7 +21,8 @@ class TripHandler implements TripsAPI {
 
     @Override
     public ResponseEntity<TripDto> create(TripDto tripDto) {
-        return ResponseEntity.ok(tripMapper.toDto(tripMapper.toEntity(tripDto)));
+        tripDto.setIsActive(true);
+        return ResponseEntity.ok(tripMapper.toDto(tripService.save(tripMapper.toEntity(tripDto))));
     }
 
     @Override
