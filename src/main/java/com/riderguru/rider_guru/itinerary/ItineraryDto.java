@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,5 +14,11 @@ import lombok.NoArgsConstructor;
 public class ItineraryDto {
     private Long id;
     private String eventDescription;
+    private String nodalPointName;
+    private String nodalPointLocMap;
+    private LocalDateTime nodalPointScheduledTime;
+    private LocalDateTime nodalPointActualTime;
+    private String banner;
+    private Boolean isActive;
     private Long tripId;
 }

@@ -20,8 +20,9 @@ class ItineraryHandler implements ItineraryAPI {
     }
 
     @Override
-    public ResponseEntity<ItineraryDto> create(ItineraryDto ItineraryDto) {
-        return ResponseEntity.ok(itineraryMapper.toDto(itineraryMapper.toEntity(ItineraryDto)));
+    public ResponseEntity<ItineraryDto> create(ItineraryDto itineraryDto) {
+        itineraryDto.setIsActive(true);
+        return ResponseEntity.ok(itineraryMapper.toDto(itineraryService.save(itineraryMapper.toEntity(itineraryDto))));
     }
 
     @Override
