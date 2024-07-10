@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +16,7 @@ import java.util.Optional;
 @Transactional
 @Slf4j
 @Service
-public class UserService implements GenericService<User> {
+class UserService implements GenericService<User> {
 
     private final UserRepository userRepository;
 
@@ -57,9 +59,20 @@ public class UserService implements GenericService<User> {
             log.info("No criteria provided");
             return Collections.emptyList();
         }
-        Specification<User> spec = Specification.where(UserSpecification.hasEmail(params.get("email")))
-                .and(UserSpecification.hasName(params.get("name")))
-                .and(UserSpecification.hasMobileNumber(params.get("mobileNumber")));
+        Specification<User> spec = null;
+        try {
+            spec = Specification.where(UserSpecification.hasEmail(params.get("email")))
+                    .and(UserSpecification.hasName(params.get("name")))
+                    .and(UserSpecification.hasMobileNumber(params.get("mobileNumber")))
+                    .and(UserSpecification.isEmailVerified(Boolean.parseBoolean(params.get("isEmailVerified"))))
+                    .and(UserSpecification.hasDob(new SimpleDateFormat("yyyy-MM-dd").parse(params.get("dob"))))
+                    .and(UserSpecification.hasProfileImage(params.get("profileImage")))
+                    .and(UserSpecification.hasSosEmergencyContact(params.get("sosEmergencyContact")))
+                    .and(UserSpecification.isActive(Boolean.parseBoolean(params.get("isActive"))))
+                    .and(UserSpecification.isPremium(Boolean.parseBoolean(params.get("isPremium"))));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
         List<User> users = userRepository.findAll(spec);
         log.info("User found : {}", !users.isEmpty());
         return users;
