@@ -11,7 +11,7 @@ import java.util.Map;
 
 @Slf4j
 @Component
-public class UserHandler implements UsersAPI {
+class UserHandler implements UsersAPI {
 
     private final UserService userService;
     private final UserMapper userMapper;
