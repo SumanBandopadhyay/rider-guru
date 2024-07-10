@@ -1,0 +1,59 @@
+package com.riderguru.rider_guru.trips.internal;
+
+import com.riderguru.rider_guru.trips.TripDto;
+import com.riderguru.rider_guru.trips.TripsAPI;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
+
+@Component
+class TripHandler implements TripsAPI {
+
+    private final TripService tripService;
+    private final TripMapper tripMapper;
+
+    public TripHandler(TripService tripService, TripMapper tripMapper) {
+        this.tripService = tripService;
+        this.tripMapper = tripMapper;
+    }
+
+    @Override
+    public ResponseEntity<TripDto> create(TripDto tripDto) {
+        return ResponseEntity.ok(tripMapper.toDto(tripMapper.toEntity(tripDto)));
+    }
+
+    @Override
+    public ResponseEntity<TripDto> getById(Long id) {
+        return tripService.getById(id)
+                .map(trip -> ResponseEntity.ok(tripMapper.toDto(trip)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @Override
+    public ResponseEntity<List<TripDto>> getAll() {
+        return ResponseEntity.ok(tripService.getAll()
+                .stream()
+                .map(tripMapper::toDto)
+                .toList());
+    }
+
+    @Override
+    public ResponseEntity<TripDto> delete(Long id) {
+        return tripService.getById(id)
+                .map(trip -> {
+                    tripService.delete(id);
+                    return ResponseEntity.ok(tripMapper.toDto(trip));
+                })
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @Override
+    public ResponseEntity<List<TripDto>> query(Map<String, String> params) {
+        return ResponseEntity.ok(tripService.query(params)
+                .stream()
+                .map(tripMapper::toDto)
+                .toList());
+    }
+}
