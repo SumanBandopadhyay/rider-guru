@@ -1,4 +1,4 @@
-package com.riderguru.rider_guru.users;
+package com.riderguru.rider_guru.libs;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
