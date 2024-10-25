@@ -46,3 +46,38 @@ create table if not exists joining_points (
   is_active BINARY NOT NULL,
   trip_id bigint unsigned NOT NULL
 );
+
+create table if not exists notifications (
+  id serial primary key not null
+);
+
+CREATE TABLE if not exists payments (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY not null,
+    amount INT,
+    currency VARCHAR(255),
+    accept_partial BOOLEAN,
+    first_min_partial_amount INT,
+    expire_by BIGINT,
+    reference_id VARCHAR(255),
+    description TEXT,
+    customer_name VARCHAR(255),
+    customer_contact VARCHAR(255),
+    customer_email VARCHAR(255),
+    notify_sms BOOLEAN,
+    notify_email BOOLEAN,
+    reminder_enable BOOLEAN,
+    notes JSON,
+    callback_url VARCHAR(255),
+    callback_method VARCHAR(255),
+    amount_paid INT,
+    created_at BIGINT,
+    cancelled_at BIGINT,
+    expired_at BIGINT,
+    payment_link_id VARCHAR(255),
+    short_url VARCHAR(255),
+    status VARCHAR(255),
+    updated_at BIGINT,
+    upi_link BOOLEAN,
+    whatsapp_link BOOLEAN,
+    razorpay_id VARCHAR(255)
+);

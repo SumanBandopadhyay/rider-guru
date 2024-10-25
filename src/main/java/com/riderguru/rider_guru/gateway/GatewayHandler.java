@@ -4,6 +4,12 @@ import com.riderguru.rider_guru.itinerary.ItineraryAPI;
 import com.riderguru.rider_guru.itinerary.ItineraryDto;
 import com.riderguru.rider_guru.joining_points.JoiningPointsAPI;
 import com.riderguru.rider_guru.joining_points.JoiningPointsDto;
+import com.riderguru.rider_guru.map.LocationDto;
+import com.riderguru.rider_guru.map.MapsAPI;
+import com.riderguru.rider_guru.map.PlaceDto;
+import com.riderguru.rider_guru.notification.NotificationsAPI;
+import com.riderguru.rider_guru.payment.PaymentDto;
+import com.riderguru.rider_guru.payment.PaymentsAPI;
 import com.riderguru.rider_guru.trips.TripDto;
 import com.riderguru.rider_guru.trips.TripsAPI;
 import com.riderguru.rider_guru.users.UserDto;
@@ -17,18 +23,25 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin("*")
 public class GatewayHandler {
 
     private final UsersAPI usersAPI;
     private final TripsAPI tripsAPI;
     private final ItineraryAPI itineraryAPI;
     private final JoiningPointsAPI joiningPointsAPI;
+    private final NotificationsAPI notificationsAPI;
+    private final PaymentsAPI paymentsAPI;
+    private final MapsAPI mapsAPI;
 
-    public GatewayHandler(UsersAPI usersAPI, TripsAPI tripsAPI, ItineraryAPI itineraryAPI, JoiningPointsAPI joiningPointsAPI) {
+    public GatewayHandler(UsersAPI usersAPI, TripsAPI tripsAPI, ItineraryAPI itineraryAPI, JoiningPointsAPI joiningPointsAPI, NotificationsAPI notificationsAPI, PaymentsAPI paymentsAPI, MapsAPI mapsAPI) {
         this.usersAPI = usersAPI;
         this.tripsAPI = tripsAPI;
         this.itineraryAPI = itineraryAPI;
         this.joiningPointsAPI = joiningPointsAPI;
+        this.notificationsAPI = notificationsAPI;
+        this.paymentsAPI = paymentsAPI;
+        this.mapsAPI = mapsAPI;
     }
 
     @PostMapping("/users/create")
@@ -109,6 +122,36 @@ public class GatewayHandler {
     @DeleteMapping("/joining_points/delete")
     public ResponseEntity<JoiningPointsDto> deleteJoiningPoints(@RequestParam("joining-point-id") Long joiningPointId) {
         return joiningPointsAPI.delete(joiningPointId);
+    }
+
+    @GetMapping("/notifications/otp/send")
+    public ResponseEntity<String> sendOtp(@RequestParam("phone-number") String phoneNumber) {
+        return notificationsAPI.sendOtp(phoneNumber);
+    }
+
+    @GetMapping("/notifications/otp/verify")
+    public ResponseEntity<Boolean> verifyOtp(@RequestParam("otp") String otp) {
+        return notificationsAPI.verifyOtp(otp);
+    }
+
+    @PostMapping("/payments/create")
+    public ResponseEntity<PaymentDto> createPayment(@Valid @RequestBody PaymentDto paymentDto) {
+        return paymentsAPI.create(paymentDto);
+    }
+
+    @GetMapping("/payments/query")
+    public ResponseEntity<List<PaymentDto>> queryPayments(@RequestParam(required = false) Map<String, String> params) {
+        return paymentsAPI.query(params);
+    }
+
+    @GetMapping("/map/place/search")
+    public ResponseEntity<List<PlaceDto>> searchPlace(@RequestParam(value = "key") String placeKey) {
+        return mapsAPI.searchPlace(placeKey);
+    }
+
+    @GetMapping("/map/place/location")
+    public ResponseEntity<LocationDto> getLocation(@RequestParam(value = "place_id") String placeId) {
+        return mapsAPI.getLocation(placeId);
     }
 
 }
