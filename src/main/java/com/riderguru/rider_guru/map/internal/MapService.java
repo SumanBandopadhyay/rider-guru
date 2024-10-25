@@ -29,4 +29,8 @@ class MapService {
             throw new RuntimeException("Lat-Long not found for placeId : " + placeId, e);
         }
     }
+
+    String getRoute(double originLat, double originLng, double destLat, double destLng) {
+        return mapAdapter.getRoute(originLat, originLng, destLat, destLng);
+    }
 }

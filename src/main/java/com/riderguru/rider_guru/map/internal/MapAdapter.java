@@ -56,4 +56,33 @@ public class MapAdapter {
         return new LocationDto(lat, lng);
     }
 
+    public String getRoute(double originLat, double originLng, double destLat, double destLng) {
+        String uri = String.format(
+                "https://maps.googleapis.com/maps/api/directions/json?origin=%s,%s&destination=%s,%s&key=%s",
+                originLat, originLng, destLat, destLng, googleMapKey);
+
+        String response = restClient
+                .get()
+                .uri(uri)
+                .retrieve()
+                .body(String.class);
+
+        try {
+            JSONObject jsonResponse = new JSONObject(response);
+            if (jsonResponse.getJSONArray("routes").length() > 0) {
+                // Extracting the overview_polyline.points
+                return jsonResponse.getJSONArray("routes")
+                        .getJSONObject(0)
+                        .getJSONObject("overview_polyline")
+                        .getString("points");
+            } else {
+                log.error("No routes found");
+                return null; // or throw an exception based on your use case
+            }
+        } catch (JSONException e) {
+            log.error("Failed to parse JSON response", e);
+            return null; // Handle exception based on your use case
+        }
+    }
+
 }

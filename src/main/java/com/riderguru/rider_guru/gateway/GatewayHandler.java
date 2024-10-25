@@ -154,4 +154,12 @@ public class GatewayHandler {
         return mapsAPI.getLocation(placeId);
     }
 
+    @GetMapping("/map/place/route")
+    public ResponseEntity<String> getRoute(@RequestParam(value = "origin_lat") double originLat,
+                                           @RequestParam(value = "origin_lng") double originLng,
+                                           @RequestParam(value = "dest_lat") double destLat,
+                                           @RequestParam(value = "dest_lng") double destLng) {
+        return mapsAPI.getRoute(originLat, originLng, destLat, destLng);
+    }
+
 }

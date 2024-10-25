@@ -28,4 +28,9 @@ class MapHandler implements MapsAPI {
     public ResponseEntity<LocationDto> getLocation(String placeId) {
         return ResponseEntity.ok(mapService.locationForPlaceId(placeId));
     }
+
+    @Override
+    public ResponseEntity<String> getRoute(double originLat, double originLng, double destLat, double destLng) {
+        return ResponseEntity.ok(mapService.getRoute(originLat, originLng, destLat, destLng));
+    }
 }
