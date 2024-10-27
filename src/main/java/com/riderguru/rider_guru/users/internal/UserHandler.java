@@ -61,4 +61,9 @@ class UserHandler implements UsersAPI {
                 .map(userMapper::toDto)
                 .toList());
     }
+
+    @Override
+    public ResponseEntity<UserDto> update(UserDto userDto) {
+        return null;
+    }
 }

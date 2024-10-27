@@ -61,4 +61,9 @@ class PaymentHandler implements PaymentsAPI {
                 .map(paymentMapper::toDto)
                 .toList());
     }
+
+    @Override
+    public ResponseEntity<PaymentDto> update(PaymentDto paymentDto) {
+        return null;
+    }
 }

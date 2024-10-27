@@ -57,4 +57,9 @@ class JoiningPointHandler implements JoiningPointsAPI {
                 .map(joiningPointMapper::toDto)
                 .toList());
     }
+
+    @Override
+    public ResponseEntity<JoiningPointsDto> update(JoiningPointsDto joiningPointsDto) {
+        return null;
+    }
 }

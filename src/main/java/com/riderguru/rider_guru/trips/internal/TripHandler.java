@@ -1,13 +1,16 @@
 package com.riderguru.rider_guru.trips.internal;
 
+import com.riderguru.rider_guru.libs.exceptions.GenericException;
 import com.riderguru.rider_guru.trips.TripDto;
 import com.riderguru.rider_guru.trips.TripsAPI;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Component
 class TripHandler implements TripsAPI {
 
@@ -56,5 +59,16 @@ class TripHandler implements TripsAPI {
                 .stream()
                 .map(tripMapper::toDto)
                 .toList());
+    }
+
+    @Override
+    public ResponseEntity<TripDto> update(TripDto tripDto) {
+        tripService.getById(tripDto.getId())
+                .orElseThrow(() -> {
+                    String message = "Trip ID " + tripDto.getId() + " not present";
+                    log.error(message);
+                    return new GenericException(message);
+                });
+        return ResponseEntity.ok(tripMapper.toDto(tripService.save(tripMapper.toEntity(tripDto))));
     }
 }

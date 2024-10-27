@@ -43,6 +43,11 @@ class NotificationHandler implements NotificationsAPI {
     }
 
     @Override
+    public ResponseEntity<NotificationDto> update(NotificationDto notificationDto) {
+        return null;
+    }
+
+    @Override
     public ResponseEntity<String> sendOtp(String phone) {
         return ResponseEntity.ok("123456");
     }

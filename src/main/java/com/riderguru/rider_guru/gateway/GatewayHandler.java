@@ -69,6 +69,11 @@ public class GatewayHandler {
         return tripsAPI.create(tripDto);
     }
 
+    @PostMapping("/trips/update")
+    public ResponseEntity<TripDto> updateTrip(@Valid @RequestBody TripDto tripDto) {
+        return tripsAPI.update(tripDto);
+    }
+
     @GetMapping("/trips/query")
     public ResponseEntity<List<TripDto>> queryTrip(@RequestParam(required = false) Map<String, String> params) {
         return tripsAPI.query(params);
@@ -80,7 +85,7 @@ public class GatewayHandler {
     }
 
     @DeleteMapping("/trips/delete")
-    public ResponseEntity<TripDto> deleteTrip(@RequestParam("trip-id") Long tripId) {
+    public ResponseEntity<TripDto> deleteTrip(@RequestParam("trip_id") Long tripId) {
         return tripsAPI.delete(tripId);
     }
 

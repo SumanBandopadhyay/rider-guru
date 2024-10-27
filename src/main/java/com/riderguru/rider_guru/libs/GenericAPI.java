@@ -11,4 +11,5 @@ public interface GenericAPI<D> {
     ResponseEntity<List<D>> getAll();
     ResponseEntity<D> delete(Long id);
     ResponseEntity<List<D>> query(Map<String, String> params);
+    ResponseEntity<D> update(D d);
 }

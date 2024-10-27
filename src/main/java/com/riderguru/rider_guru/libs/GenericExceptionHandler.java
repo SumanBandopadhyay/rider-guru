@@ -1,5 +1,6 @@
 package com.riderguru.rider_guru.libs;
 
+import com.riderguru.rider_guru.libs.exceptions.GenericException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,6 +12,11 @@ public class GenericExceptionHandler {
 
     @ExceptionHandler(value = SQLIntegrityConstraintViolationException.class)
     public ResponseEntity<String> sqlException(SQLIntegrityConstraintViolationException exception) {
+        return ResponseEntity.internalServerError().body(exception.getMessage());
+    }
+
+    @ExceptionHandler(value = GenericException.class)
+    public ResponseEntity<String> genericException(GenericException exception) {
         return ResponseEntity.internalServerError().body(exception.getMessage());
     }
 

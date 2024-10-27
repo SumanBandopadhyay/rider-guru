@@ -57,4 +57,9 @@ class ItineraryHandler implements ItineraryAPI {
                 .map(itineraryMapper::toDto)
                 .toList());
     }
+
+    @Override
+    public ResponseEntity<ItineraryDto> update(ItineraryDto itineraryDto) {
+        return null;
+    }
 }
