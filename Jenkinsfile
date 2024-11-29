@@ -32,23 +32,16 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                script {
-                    sh """
-                    sudo -u suman docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
-                    """
-                }
-            }
-        }
+                node {
+                    checkout scm
 
-        stage('Docker Push') {
-            steps {
-                script {
-                    sh '''
-                    echo $DOCKER_HUB_CREDENTIALS_PSW | sudo -u suman docker login -u ${DOCKER_HUB_CREDENTIALS_USR} --password-stdin ${DOCKER_REGISTRY}
-                    '''
-                    sh """
-                    sudo -u suman docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
-                    """
+                    docker.withRegistry(${DOCKER_REGISTRY}, 'DOCKER_HUB_CREDENTIALS') {
+                        def customImage = docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
+
+                            /* Push the container to the custom Registry */
+                            customImage.push()
+
+                    }
                 }
             }
         }
