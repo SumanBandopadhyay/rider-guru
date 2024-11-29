@@ -78,7 +78,7 @@ pipeline {
                             echo "${DOCKER_HUB_CREDENTIALS_PSW}" | docker login --username "${DOCKER_HUB_CREDENTIALS_USR}" --password-stdin
 
                             echo "Pulling the latest Docker image..."
-                            docker pull ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}
+                            docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
 
                             echo "Stopping and removing existing container (if any)..."
                             docker stop rider-guru || true
