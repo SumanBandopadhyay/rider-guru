@@ -45,7 +45,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                    echo ${DOCKER_HUB_CREDENTIALS_PSW} | sudo -u suman docker login -u ${DOCKER_HUB_CREDENTIALS_USR} ${env.DOCKER_REGISTRY}
+                    echo ${{ env.DOCKER_HUB_CREDENTIALS_PSW }} | sudo -u suman docker login -u ${DOCKER_HUB_CREDENTIALS_USR} ${env.DOCKER_REGISTRY}
                     sudo -u suman docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
                     """
                 }
