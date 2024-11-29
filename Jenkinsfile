@@ -26,9 +26,10 @@ pipeline {
         stage('Docker Build and Push') {
             steps {
                 script {
-                    docker.withRegistry(${DOCKER_REGISTRY}, 'DOCKER_HUB_CREDENTIALS') {
-                        sh 'docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .'
-                        sh 'docker push ${DOCKER_IMAGE}:${DOCKER_TAG}'
+                    docker.withRegistry(env.DOCKER_REGISTRY, 'DOCKER_HUB_CREDENTIALS') {
+                        // Use proper string interpolation
+                        sh "docker build -t ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} ."
+                        sh "docker push ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}"
                     }
                 }
             }
@@ -37,19 +38,19 @@ pipeline {
         stage('Deploy to AWS EC2') {
             steps {
                 script {
-                    docker.withRegistry(${DOCKER_REGISTRY}, 'DOCKER_HUB_CREDENTIALS') {
+                    sshagent(credentials: ['AWS_SSH_KEY']) {
                         sh """
-                        ssh -o StrictHostKeyChecking=no -i ${AWS_SSH_KEY} ec2-user@${AWS_EC2_PUBLIC_IP} << EOF
+                        ssh -o StrictHostKeyChecking=no -i ${env.AWS_SSH_KEY} ec2-user@${env.AWS_EC2_PUBLIC_IP} << EOF
                             set -e  # Exit immediately if a command fails
                             echo "Pulling latest Docker image..."
-                            docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
+                            docker pull ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}
 
                             echo "Stopping and removing existing container (if any)..."
                             docker stop rider-guru || true
                             docker rm rider-guru || true
 
                             echo "Starting the new container..."
-                            docker run -d --name rider-guru -p 8080:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                            docker run -d --name rider-guru -p 8080:8080 ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}
                             echo "Deployment complete!"
                         EOF
                         """
