@@ -6,8 +6,7 @@ pipeline {
         DOCKER_IMAGE = "sumanbando/rider-guru"
         DOCKER_TAG = "latest"
         DOCKER_REGISTRY = "https://registry-1.docker.io/v2/"
-        AWS_EC2_PUBLIC_IP = "YOUR_EC2_PUBLIC_IP"
-        AWS_SSH_KEY = "your-ssh-key.pem"
+        AWS_EC2_PUBLIC_IP = "13.201.230.132"
         DOCKER_HUB_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIALS')
     }
 
@@ -59,9 +58,26 @@ pipeline {
                 script {
                     sshagent(credentials: ['AWS_SSH_KEY']) {
                         sh """
-                        ssh -o StrictHostKeyChecking=no -i ${env.AWS_SSH_KEY} ec2-user@${env.AWS_EC2_PUBLIC_IP} << EOF
+                        ssh -o StrictHostKeyChecking=no -i ${AWS_SSH_KEY} ec2-user@${AWS_EC2_PUBLIC_IP} << EOF
                             set -e  # Exit immediately if a command fails
-                            echo "Pulling latest Docker image..."
+
+                            echo "Updating package information..."
+                            sudo yum update -y
+
+                            echo "Installing Docker..."
+                            sudo yum install -y docker
+
+                            echo "Starting Docker service..."
+                            sudo systemctl start docker
+                            sudo systemctl enable docker
+
+                            echo "Adding ec2-user to the Docker group..."
+                            sudo usermod -aG docker ec2-user
+
+                            echo "Logging in to Docker..."
+                            echo "${DOCKER_HUB_CREDENTIALS_PSW}" | docker login --username "${DOCKER_HUB_CREDENTIALS_USR}" --password-stdin
+
+                            echo "Pulling the latest Docker image..."
                             docker pull ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}
 
                             echo "Stopping and removing existing container (if any)..."
@@ -70,7 +86,8 @@ pipeline {
 
                             echo "Starting the new container..."
                             docker run -d --name rider-guru -p 8080:8080 ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}
-                            echo "Deployment complete!"
+
+                            echo "Deployment completed successfully!"
                         EOF
                         """
                     }
