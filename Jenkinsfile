@@ -28,8 +28,8 @@ pipeline {
                 script {
                     docker.withRegistry(env.DOCKER_REGISTRY, 'DOCKER_HUB_CREDENTIALS') {
                         // Use proper string interpolation
-                        sh "docker build -t ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} ."
-                        sh "docker push ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}"
+                        sh "sudo -u suman docker build -t ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} ."
+                        sh "sudo -u suman docker push ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}"
                     }
                 }
             }
