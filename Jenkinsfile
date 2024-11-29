@@ -31,28 +31,26 @@ pipeline {
             }
         }
 
-        stage('Docker Build and Push') {
+        stage('Docker Build') {
             steps {
                 script {
-                    docker.withRegistry(env.DOCKER_REGISTRY, 'DOCKER_HUB_CREDENTIALS') {
-                        echo "Environment Variables:"
-                        sh 'printenv | sort'
-
-                        echo "Docker login debug..."
-                        sh "docker --debug login -u ${DOCKER_HUB_CREDENTIALS_USR} -p ${DOCKER_HUB_CREDENTIALS_PSW} ${env.DOCKER_REGISTRY}"
-
-                        echo "Docker build started..."
-                        sh "sudo -u suman docker build --debug -t ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} ."
-                        echo "Docker build completed..."
-
-                        echo "Docker push started..."
-                        sh "sudo -u suman docker push --debug ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}"
-                        echo "Docker push completed..."
-                    }
+                    sh """
+                    sudo -u suman docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
+                    """
                 }
             }
         }
 
+        stage('Docker Push') {
+            steps {
+                script {
+                    sh """
+                    echo ${DOCKER_HUB_CREDENTIALS_PSW} | docker login -u ${DOCKER_HUB_CREDENTIALS_USR} --password-stdin
+                    sudo -u suman docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+                    """
+                }
+            }
+        }
 
         stage('Deploy to AWS EC2') {
             steps {
