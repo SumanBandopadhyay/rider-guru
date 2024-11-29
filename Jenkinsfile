@@ -57,7 +57,7 @@ pipeline {
             steps {
                 script {
                     sshagent(credentials: ['AWS_SSH_KEY']) {
-                        sh """
+                        sh '''
                         ssh -o StrictHostKeyChecking=no ec2-user@${AWS_EC2_PUBLIC_IP} << EOF
                             set -e  # Exit immediately if a command fails
 
@@ -85,11 +85,11 @@ pipeline {
                             docker rm rider-guru || true
 
                             echo "Starting the new container..."
-                            docker run -d --name rider-guru -p 8080:8080 ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}
+                            docker run -d --name rider-guru -p 8080:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
 
                             echo "Deployment completed successfully!"
                         EOF
-                        """
+                        '''
                     }
                 }
             }
