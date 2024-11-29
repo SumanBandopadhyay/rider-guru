@@ -11,6 +11,13 @@ pipeline {
     }
 
     stages {
+        stage('Debug Docker') {
+            steps {
+                sh 'docker --version'
+                sh 'docker info'
+            }
+        }
+
         stage('Checkout') {
             steps {
                 git 'https://github.com/SumanBandopadhyay/rider-guru.git'
