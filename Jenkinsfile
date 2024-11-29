@@ -7,6 +7,7 @@ pipeline {
         DOCKER_REGISTRY = "https://index.docker.io/v1/"
         AWS_EC2_PUBLIC_IP = "YOUR_EC2_PUBLIC_IP"
         AWS_SSH_KEY = "your-ssh-key.pem"
+        DOCKER_HUB_USERNAME = credentials('DOCKER_HUB_CREDENTIALS')
     }
 
     stages {
@@ -35,10 +36,9 @@ pipeline {
         stage('Docker Push') {
             steps {
                 script {
-                    sh """
-                    echo ${env.DOCKER_HUB_PASSWORD} | docker login -u ${env.DOCKER_HUB_USERNAME} --password-stdin
-                    docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
-                    """
+                    docker.withRegistry(${DOCKER_REGISTRY}, 'DOCKER_HUB_CREDENTIALS') {
+                        sh 'docker push ${DOCKER_IMAGE}:${DOCKER_TAG}'
+                    }
                 }
             }
         }
