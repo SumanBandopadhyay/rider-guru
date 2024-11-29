@@ -7,7 +7,7 @@ pipeline {
         DOCKER_REGISTRY = "https://index.docker.io/v1/"
         AWS_EC2_PUBLIC_IP = "YOUR_EC2_PUBLIC_IP"
         AWS_SSH_KEY = "your-ssh-key.pem"
-        DOCKER_HUB_USERNAME = credentials('DOCKER_HUB_CREDENTIALS')
+        DOCKER_HUB_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIALS')
     }
 
     stages {
