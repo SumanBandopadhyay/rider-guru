@@ -44,10 +44,10 @@ pipeline {
         stage('Docker Push') {
             steps {
                 script {
-                    docker.withRegistry(${DOCKER_REGISTRY}, 'DOCKER_HUB_CREDENTIALS') {
-                        // Push the Docker image
-                        sh 'sudo -u suman docker push ${DOCKER_IMAGE}:${DOCKER_TAG}'
-                    }
+                    sh """
+                    echo ${DOCKER_HUB_CREDENTIALS_PSW} | sudo -u suman docker login -u ${DOCKER_HUB_CREDENTIALS_USR} ${env.DOCKER_REGISTRY}
+                    sudo -u suman docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+                    """
                 }
             }
         }
