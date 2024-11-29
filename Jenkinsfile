@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        PATH = "/usr/local/bin:$PATH"
         DOCKER_IMAGE = "sumanbando/rider-guru"
         DOCKER_TAG = "latest"
         DOCKER_REGISTRY = "https://index.docker.io/v1/"
@@ -13,8 +14,8 @@ pipeline {
     stages {
         stage('Debug Docker') {
             steps {
-                sh 'docker --version'
-                sh 'docker info'
+                sh 'echo $PATH'
+                sh 'sudo -u suman docker --version'
             }
         }
 
