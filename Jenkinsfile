@@ -5,7 +5,7 @@ pipeline {
         PATH = "/usr/local/bin:$PATH"
         DOCKER_IMAGE = "sumanbando/rider-guru"
         DOCKER_TAG = "latest"
-        DOCKER_REGISTRY = "https://hub.docker.com/"
+        DOCKER_REGISTRY = "https://registry-1.docker.io/v2/"
         AWS_EC2_PUBLIC_IP = "YOUR_EC2_PUBLIC_IP"
         AWS_SSH_KEY = "your-ssh-key.pem"
         DOCKER_HUB_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIALS')
@@ -35,17 +35,24 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry(env.DOCKER_REGISTRY, 'DOCKER_HUB_CREDENTIALS') {
-                        // Use proper string interpolation
+                        echo "Environment Variables:"
+                        sh 'printenv | sort'
+
+                        echo "Docker login debug..."
+                        sh "docker --debug login -u ${DOCKER_HUB_CREDENTIALS_USR} -p ${DOCKER_HUB_CREDENTIALS_PSW} ${env.DOCKER_REGISTRY}"
+
                         echo "Docker build started..."
-                        sh "sudo -u suman docker build -t ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} ."
+                        sh "sudo -u suman docker build --debug -t ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} ."
                         echo "Docker build completed..."
+
                         echo "Docker push started..."
-                        sh "sudo -u suman docker push ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}"
+                        sh "sudo -u suman docker push --debug ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}"
                         echo "Docker push completed..."
                     }
                 }
             }
         }
+
 
         stage('Deploy to AWS EC2') {
             steps {
