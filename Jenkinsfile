@@ -23,20 +23,11 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
-            steps {
-                script {
-                    sh """
-                    docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
-                    """
-                }
-            }
-        }
-
-        stage('Docker Push') {
+        stage('Docker Build and Push') {
             steps {
                 script {
                     docker.withRegistry(${DOCKER_REGISTRY}, 'DOCKER_HUB_CREDENTIALS') {
+                        sh 'docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .'
                         sh 'docker push ${DOCKER_IMAGE}:${DOCKER_TAG}'
                     }
                 }
