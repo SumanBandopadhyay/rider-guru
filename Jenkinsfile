@@ -39,7 +39,7 @@ pipeline {
                     '''
                     sh """
                     echo "Docker build started..."
-                    sudo -u suman docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
+                    sudo -u suman docker build --platform=linux/amd64 -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
                     echo "DOCKER_IMAGE build complete..."
 
                     echo "Docker push started..."
