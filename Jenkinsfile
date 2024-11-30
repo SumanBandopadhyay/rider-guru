@@ -58,7 +58,7 @@ pipeline {
                 script {
                     sshagent(credentials: ['AWS_SSH_KEY']) {
                         sh '''
-                        ssh -o StrictHostKeyChecking=no ec2-user@${AWS_EC2_PUBLIC_IP} << EOF
+                        ssh -o StrictHostKeyChecking=no ec2-user@${AWS_EC2_PUBLIC_IP} <<EOF
                             set -e  # Exit immediately if a command fails
 
                             echo "Updating package information..."
@@ -76,6 +76,7 @@ pipeline {
                         EOF
                         '''
                     }
+
                     sh '''
                     echo "Logging in to Docker..."
                     echo "$DOCKER_HUB_CREDENTIALS_PSW" | docker login -u "${DOCKER_HUB_CREDENTIALS_USR}" --password-stdin ${DOCKER_REGISTRY}
@@ -95,7 +96,6 @@ pipeline {
                 }
             }
         }
-    }
 
     post {
         always {
