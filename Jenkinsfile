@@ -75,7 +75,7 @@ pipeline {
                             sudo usermod -aG docker ec2-user
 
                             echo "Logging in to Docker..."
-                            docker login -u "${DOCKER_HUB_CREDENTIALS_USR}" -p $DOCKER_HUB_CREDENTIALS_PSW ${DOCKER_REGISTRY}
+                            echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u "${DOCKER_HUB_CREDENTIALS_USR}" --password-stdin ${DOCKER_REGISTRY}
 
                             echo "Pulling the latest Docker image..."
                             docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
