@@ -72,17 +72,17 @@ pipeline {
         sudo usermod -aG docker ec2-user
 
         echo "Logging in to Docker..."
-        echo "$DOCKER_HUB_CREDENTIALS_PSW" | docker login -u "$DOCKER_HUB_CREDENTIALS_USR" --password-stdin "$DOCKER_REGISTRY"
+        echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u "${DOCKER_HUB_CREDENTIALS_USR}" --password-stdin ${DOCKER_REGISTRY}
 
         echo "Pulling the latest Docker image..."
-        docker pull $DOCKER_IMAGE:$DOCKER_TAG
+        docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
 
         echo "Stopping and removing existing container (if any)..."
         docker stop rider-guru || true
         docker rm rider-guru || true
 
         echo "Starting the new container..."
-        docker run -d --name rider-guru -p 8080:8080 $DOCKER_IMAGE:$DOCKER_TAG
+        docker run -d --name rider-guru -p 8080:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
 
         echo "Deployment completed successfully!"
         EOF
