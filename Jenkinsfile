@@ -32,7 +32,7 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                node {
+                script {
                     checkout scm
 
                     docker.withRegistry(${DOCKER_REGISTRY}, 'DOCKER_HUB_CREDENTIALS') {
