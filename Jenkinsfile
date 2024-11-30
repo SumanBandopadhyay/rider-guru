@@ -34,7 +34,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                    sudo -u suman docker logout
+                    sudo -u suman docker logout ${DOCKER_REGISTRY}
                     echo $DOCKER_HUB_CREDENTIALS_PSW | sudo -u suman docker login -u ${DOCKER_HUB_CREDENTIALS_USR} --password-stdin ${DOCKER_REGISTRY}
                     '''
                     sh """
