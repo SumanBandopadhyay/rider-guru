@@ -4,7 +4,7 @@ pipeline {
     environment {
         PATH = "/usr/local/bin:$PATH"
         DOCKER_IMAGE = "sumanbando/rider-guru"
-        DOCKER_TAG = "v1"
+        DOCKER_TAG = "latest"
         DOCKER_REGISTRY = "https://registry-1.docker.io/v2/"
         AWS_EC2_PUBLIC_IP = "13.201.230.132"
         DOCKER_HUB_CREDENTIALS = credentials('DOCKER_HUB_CREDENTIALS')
