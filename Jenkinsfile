@@ -73,7 +73,7 @@ pipeline {
 
                             echo "Logging in to Docker..."
                             docker logout ${DOCKER_REGISTRY}
-                            echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -username "${DOCKER_HUB_CREDENTIALS_USR}" --password-stdin ${DOCKER_REGISTRY}
+                            echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u "${DOCKER_HUB_CREDENTIALS_USR}" --password-stdin ${DOCKER_REGISTRY}
 
                             echo "Pulling the latest Docker image..."
                             docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
