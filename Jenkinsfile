@@ -30,24 +30,20 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
-            steps {
-                script {
-                    sh """
-                    sudo -u suman docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
-                    """
-                }
-            }
-        }
-
-        stage('Docker Push') {
+        stage('Docker Build and Push') {
             steps {
                 script {
                     sh '''
                     echo $DOCKER_HUB_CREDENTIALS_PSW | sudo -u suman docker login -u ${DOCKER_HUB_CREDENTIALS_USR} --password-stdin ${DOCKER_REGISTRY}
                     '''
                     sh """
+                    echo "Docker build started..."
+                    sudo -u suman docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
+                    echo "DOCKER_IMAGE build complete..."
+
+                    echo "Docker push started..."
                     sudo -u suman docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+                    echo "Docker push completed..."
                     """
                 }
             }
