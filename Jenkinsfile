@@ -55,7 +55,7 @@ pipeline {
                 script {
                     sshagent(credentials: ['AWS_SSH_KEY']) {
                         sh '''
-                        ssh -o StrictHostKeyChecking=no ec2-user@${AWS_EC2_PUBLIC_IP} << 'EOF'
+                        ssh -o StrictHostKeyChecking=no ec2-user@${AWS_EC2_PUBLIC_IP} << EOF
                             set -e  # Exit immediately if a command fails
 
                             echo "Updating package information..."
