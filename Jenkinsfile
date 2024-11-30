@@ -85,7 +85,7 @@ pipeline {
                             docker run -d --name rider-guru -p 8080:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
 
                             echo "Deployment completed successfully!"
-                        EOF
+                            EOF
                         '''
                     }
                 }
