@@ -33,15 +33,22 @@ pipeline {
         stage('Docker Build') {
             steps {
                 script {
-                    checkout scm
+                    sh """
+                    sudo -u suman docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
+                    """
+                }
+            }
+        }
 
-                    docker.withRegistry(${DOCKER_REGISTRY}, 'DOCKER_HUB_CREDENTIALS') {
-                        def customImage = docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
-
-                            /* Push the container to the custom Registry */
-                            customImage.push()
-
-                    }
+        stage('Docker Push') {
+            steps {
+                script {
+                    sh '''
+                    echo $DOCKER_HUB_CREDENTIALS_PSW | sudo -u suman docker login -u ${DOCKER_HUB_CREDENTIALS_USR} --password-stdin ${DOCKER_REGISTRY}
+                    '''
+                    sh """
+                    sudo -u suman docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+                    """
                 }
             }
         }
@@ -66,24 +73,25 @@ pipeline {
 
                             echo "Adding ec2-user to the Docker group..."
                             sudo usermod -aG docker ec2-user
-
-                            echo "Logging in to Docker..."
-                            echo "$DOCKER_HUB_CREDENTIALS_PSW" | docker login -u "${DOCKER_HUB_CREDENTIALS_USR}" --password-stdin ${DOCKER_REGISTRY}
-
-                            echo "Pulling the latest Docker image..."
-                            docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
-
-                            echo "Stopping and removing existing container (if any)..."
-                            docker stop rider-guru || true
-                            docker rm rider-guru || true
-
-                            echo "Starting the new container..."
-                            docker run -d --name rider-guru -p 8080:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
-
-                            echo "Deployment completed successfully!"
                         EOF
                         '''
                     }
+                    sh '''
+                    echo "Logging in to Docker..."
+                    echo "$DOCKER_HUB_CREDENTIALS_PSW" | docker login -u "${DOCKER_HUB_CREDENTIALS_USR}" --password-stdin ${DOCKER_REGISTRY}
+
+                    echo "Pulling the latest Docker image..."
+                    docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
+
+                    echo "Stopping and removing existing container (if any)..."
+                    docker stop rider-guru || true
+                    docker rm rider-guru || true
+
+                    echo "Starting the new container..."
+                    docker run -d --name rider-guru -p 8080:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
+
+                    echo "Deployment completed successfully!"
+                    '''
                 }
             }
         }
