@@ -11,13 +11,6 @@ pipeline {
     }
 
     stages {
-        stage('Debug Docker') {
-            steps {
-                sh 'echo $PATH'
-                sh 'sudo -u suman docker --version'
-            }
-        }
-
         stage('Checkout') {
             steps {
                 git 'https://github.com/SumanBandopadhyay/rider-guru.git'
@@ -39,11 +32,11 @@ pipeline {
                     '''
                     sh """
                     echo "Docker build started..."
-                    sudo -u suman docker build --platform=linux/amd64 -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
+                    docker build --platform=linux/amd64 -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
                     echo "DOCKER_IMAGE build complete..."
 
                     echo "Docker push started..."
-                    sudo -u suman docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+                    docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
                     echo "Docker push completed..."
                     """
                 }
