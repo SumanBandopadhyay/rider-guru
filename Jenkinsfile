@@ -11,12 +11,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/SumanBandopadhyay/rider-guru.git'
-            }
-        }
-
         stage('Build') {
             steps {
                 sh './mvnw clean package -DskipTests'
