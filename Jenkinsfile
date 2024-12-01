@@ -55,38 +55,21 @@ pipeline {
                 script {
                     sshagent(credentials: ['AWS_SSH_KEY']) {
                         sh '''
-                        ssh ec2-user@${AWS_EC2_PUBLIC_IP} << EOF
-                            set -e  # Exit immediately if a command fails
+                        echo "Logging in to Docker..."
+                        docker logout ${DOCKER_REGISTRY}
+                        echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u "${DOCKER_HUB_CREDENTIALS_USR}" --password-stdin ${DOCKER_REGISTRY}
 
-                            echo "Updating package information..."
-                            sudo yum update -y
+                        echo "Pulling the latest Docker image..."
+                        docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
 
-                            echo "Installing Docker..."
-                            sudo yum install -y docker
+                        echo "Stopping and removing existing container (if any)..."
+                        docker stop rider-guru || true
+                        docker rm rider-guru || true
 
-                            echo "Starting Docker service..."
-                            sudo systemctl start docker
-                            sudo systemctl enable docker
+                        echo "Starting the new container..."
+                        docker run -d --name rider-guru -p 8080:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
 
-                            echo "Adding ec2-user to the Docker group..."
-                            sudo usermod -aG docker ec2-user
-
-                            echo "Logging in to Docker..."
-                            docker logout ${DOCKER_REGISTRY}
-                            echo $DOCKER_HUB_CREDENTIALS_PSW | docker login -u "${DOCKER_HUB_CREDENTIALS_USR}" --password-stdin ${DOCKER_REGISTRY}
-
-                            echo "Pulling the latest Docker image..."
-                            docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
-
-                            echo "Stopping and removing existing container (if any)..."
-                            docker stop rider-guru || true
-                            docker rm rider-guru || true
-
-                            echo "Starting the new container..."
-                            docker run -d --name rider-guru -p 8080:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
-
-                            echo "Deployment completed successfully!"
-                            EOF
+                        echo "Deployment completed successfully!"
                         '''
                     }
                 }
