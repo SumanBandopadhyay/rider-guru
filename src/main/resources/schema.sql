@@ -66,7 +66,6 @@ CREATE TABLE if not exists payments (
     notify_sms BOOLEAN,
     notify_email BOOLEAN,
     reminder_enable BOOLEAN,
-    notes JSON,
     callback_url VARCHAR(255),
     callback_method VARCHAR(255),
     amount_paid INT,
