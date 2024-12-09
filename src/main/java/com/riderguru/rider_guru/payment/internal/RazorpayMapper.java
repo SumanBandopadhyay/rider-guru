@@ -35,7 +35,7 @@ class RazorpayMapper {
         map.put("reminder_enable", paymentDto.getReminderEnable());
 
         // Notes
-        map.put("notes", paymentDto.getNotes());
+//        map.put("notes", paymentDto.getNotes());
 
         map.put("callback_url", paymentDto.getCallbackUrl());
         map.put("callback_method", paymentDto.getCallbackMethod());
@@ -75,10 +75,10 @@ class RazorpayMapper {
 
         dtoBuilder.reminderEnable((Boolean) response.get("reminder_enable"));
 
-        Map<String, String> notesMap = (Map<String, String>) response.get("notes");
-        if (notesMap != null) {
-            dtoBuilder.notes(notesMap);
-        }
+//        Map<String, String> notesMap = (Map<String, String>) response.get("notes");
+//        if (notesMap != null) {
+//            dtoBuilder.notes(notesMap);
+//        }
 
         dtoBuilder.callbackUrl((String) response.get("callback_url"))
                 .callbackMethod((String) response.get("callback_method"))

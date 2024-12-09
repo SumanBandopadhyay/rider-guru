@@ -48,8 +48,8 @@ public class PaymentDto {
     @JsonProperty("reminder_enable")
     private Boolean reminderEnable;
 
-    @JsonProperty("notes")
-    private Map<String, String> notes;
+//    @JsonProperty("notes")
+//    private Map<String, String> notes;
 
     @JsonProperty("callback_url")
     private String callbackUrl;

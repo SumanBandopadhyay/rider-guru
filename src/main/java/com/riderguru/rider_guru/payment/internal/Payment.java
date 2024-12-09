@@ -33,9 +33,9 @@ class Payment {
     private Boolean notifyEmail;
     private Boolean reminderEnable;
 
-    @Convert(converter = JsonAttributeConverter.class)
-    @Column(columnDefinition = "JSON")
-    private Map<String, String> notes;
+//    @Convert(converter = JsonAttributeConverter.class)
+//    @Column(columnDefinition = "JSON")
+//    private Map<String, String> notes;
 
     private String callbackUrl;
     private String callbackMethod;
