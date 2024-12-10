@@ -1,11 +1,12 @@
 package com.riderguru.rider_guru.map.internal;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.riderguru.rider_guru.map.LocationDto;
 import com.riderguru.rider_guru.map.PlaceDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -37,7 +38,7 @@ public class MapAdapter {
         return placeResponse != null ? placeResponse.getPlaces() : List.of();
     }
 
-    LocationDto locationForPlaceId(String placeId) throws JSONException {
+    LocationDto locationForPlaceId(String placeId) throws JsonProcessingException {
         String response = restClient
                 .get()
                 .uri("https://maps.googleapis.com/maps/api/place/details/json?place_id=" + placeId +
@@ -45,13 +46,12 @@ public class MapAdapter {
                         "&key=" + googleMapKey)
                 .retrieve()
                 .body(String.class);
-        JSONObject json = new JSONObject(response);
-        JSONObject location = json.getJSONObject("result")
-                .getJSONObject("geometry")
-                .getJSONObject("location");
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode json = objectMapper.readTree(response);
+        JsonNode location = json.path("result").path("geometry").path("location");
 
-        double lat = location.getDouble("lat");
-        double lng = location.getDouble("lng");
+        double lat = location.path("lat").asDouble();
+        double lng = location.path("lng").asDouble();
 
         return new LocationDto(lat, lng);
     }
@@ -68,18 +68,19 @@ public class MapAdapter {
                 .body(String.class);
 
         try {
-            JSONObject jsonResponse = new JSONObject(response);
-            if (jsonResponse.getJSONArray("routes").length() > 0) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonResponse = objectMapper.readTree(response);
+            JsonNode routesArray = jsonResponse.path("routes");
+            if (routesArray.isArray() && !routesArray.isEmpty()) {
                 // Extracting the overview_polyline.points
-                return jsonResponse.getJSONArray("routes")
-                        .getJSONObject(0)
-                        .getJSONObject("overview_polyline")
-                        .getString("points");
+                JsonNode overviewPolyline = routesArray.get(0).path("overview_polyline");
+                return overviewPolyline.path("points").asText();
+
             } else {
                 log.error("No routes found");
                 return null; // or throw an exception based on your use case
             }
-        } catch (JSONException e) {
+        } catch (Exception e) {
             log.error("Failed to parse JSON response", e);
             return null; // Handle exception based on your use case
         }

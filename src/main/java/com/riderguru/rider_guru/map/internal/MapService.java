@@ -3,7 +3,6 @@ package com.riderguru.rider_guru.map.internal;
 import com.riderguru.rider_guru.map.LocationDto;
 import com.riderguru.rider_guru.map.PlaceDto;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +24,7 @@ class MapService {
     LocationDto locationForPlaceId(String placeId){
         try {
             return mapAdapter.locationForPlaceId(placeId);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Lat-Long not found for placeId : " + placeId, e);
         }
     }
