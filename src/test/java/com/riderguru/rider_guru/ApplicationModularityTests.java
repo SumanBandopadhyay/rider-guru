@@ -1,6 +1,7 @@
 package com.riderguru.rider_guru;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Assertions;
 import org.springframework.modulith.core.ApplicationModules;
 
 class ApplicationModularityTests {
@@ -9,6 +10,8 @@ class ApplicationModularityTests {
     void bootstrapApplicationModules() {
         var modules = ApplicationModules.of(RiderGuruApplication.class);
 
-		System.out.println(modules);    }
+        modules.verify();
+        Assertions.assertFalse(modules.stream().count() == 0);
+    }
 
 }
