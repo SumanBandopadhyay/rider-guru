@@ -53,6 +53,7 @@ create table if not exists notifications (
 
 CREATE TABLE if not exists payments (
     id BIGINT AUTO_INCREMENT PRIMARY KEY not null,
+    user_id BIGINT,
     amount INT,
     currency VARCHAR(255),
     accept_partial BOOLEAN,

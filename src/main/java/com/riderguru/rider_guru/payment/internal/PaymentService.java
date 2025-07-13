@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -55,9 +56,14 @@ class PaymentService implements GenericService<Payment> {
             log.info("No criteria provided");
             return Collections.emptyList();
         }
-        Specification<Payment> spec = Specification.where(PaymentSpecification.hasRazorpayId(params.get("razorpayId")));
+        Specification<Payment> spec = Specification.where(PaymentSpecification.hasRazorpayId(params.get("razorpayId")))
+                .and(PaymentSpecification.hasUserId(parseLong(params.get("userId"))));
         List<Payment> payments = paymentRepository.findAll(spec);
         log.info("Payment found : {}", !payments.isEmpty());
         return payments;
+    }
+
+    private Long parseLong(String longStr) {
+        return StringUtils.hasText(longStr) ? Long.parseLong(longStr) : null;
     }
 }
