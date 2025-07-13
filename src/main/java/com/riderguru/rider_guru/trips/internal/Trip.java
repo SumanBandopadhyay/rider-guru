@@ -38,4 +38,6 @@ class Trip {
     private LocalDateTime actualEndTime;
     @Column(name = "is_active")
     private Boolean isActive;
+    @Column(name = "user_id")
+    private Long userId;
 }

@@ -23,4 +23,5 @@ public class TripDto {
     private LocalDateTime scheduledEndTime;
     private LocalDateTime actualEndTime;
     private Boolean isActive;
+    private Long userId;
 }

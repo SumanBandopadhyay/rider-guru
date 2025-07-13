@@ -22,7 +22,8 @@ create table if not exists trips (
     actual_start_time DATETIME NULL,
     scheduled_end_time DATETIME NOT NULL,
     actual_end_time DATETIME NOT NULL,
-    is_active BINARY NOT NULL
+    is_active BINARY NOT NULL,
+    user_id BIGINT NULL
 );
 
 create table if not exists itinerary (
