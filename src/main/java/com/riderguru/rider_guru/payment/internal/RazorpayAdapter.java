@@ -3,6 +3,7 @@ package com.riderguru.rider_guru.payment.internal;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -23,9 +24,17 @@ class RazorpayAdapter {
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
 
-    RazorpayAdapter(RestTemplate restTemplate, ObjectMapper objectMapper) {
+    private final String apiKey;
+    private final String apiSecret;
+
+    RazorpayAdapter(RestTemplate restTemplate,
+                   ObjectMapper objectMapper,
+                   @Value("${razorpay.api.key}") String apiKey,
+                   @Value("${razorpay.api.secret}") String apiSecret) {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
+        this.apiKey = apiKey;
+        this.apiSecret = apiSecret;
     }
 
     public Map<String, Object> createPaymentLink(Map<String, Object> paymentLinkRequest) {
@@ -51,8 +60,6 @@ class RazorpayAdapter {
     }
 
     private String getBasicAuth() {
-        String apiKey = "rzp_test_mw2iyETt0Pr6Lr";
-        String apiSecret = "9ByQyTfoPzMeB2YADOcNiTTy";
         String auth = apiKey + ":" + apiSecret;
         return Base64.getEncoder().encodeToString(auth.getBytes());
     }
