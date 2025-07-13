@@ -8,6 +8,7 @@ import com.riderguru.rider_guru.map.LocationDto;
 import com.riderguru.rider_guru.map.MapsAPI;
 import com.riderguru.rider_guru.map.PlaceDto;
 import com.riderguru.rider_guru.notification.NotificationsAPI;
+import com.riderguru.rider_guru.notification.NotificationDto;
 import com.riderguru.rider_guru.payment.PaymentDto;
 import com.riderguru.rider_guru.payment.PaymentsAPI;
 import com.riderguru.rider_guru.trips.TripDto;
@@ -137,6 +138,11 @@ public class GatewayHandler {
     @GetMapping("/notifications/otp/verify")
     public ResponseEntity<Boolean> verifyOtp(@RequestParam("otp") String otp) {
         return notificationsAPI.verifyOtp(otp);
+    }
+
+    @GetMapping("/notifications/query")
+    public ResponseEntity<List<NotificationDto>> queryNotifications(@RequestParam(required = false) Map<String, String> params) {
+        return notificationsAPI.query(params);
     }
 
     @PostMapping("/payments/create")
