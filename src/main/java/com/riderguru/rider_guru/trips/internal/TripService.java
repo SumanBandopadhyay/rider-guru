@@ -5,6 +5,8 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import java.time.format.DateTimeFormatter;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -72,5 +74,12 @@ class TripService implements GenericService<Trip> {
         List<Trip> trips = tripRepository.findAll(spec);
         log.info("Trips found : {}", trips.size());
         return trips;
+    }
+    private LocalDateTime parseLocalDateTime(String dateTimeStr) {
+        return StringUtils.hasText(dateTimeStr) ? LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_DATE_TIME) : null;
+    }
+
+    private Boolean parseBoolean(String booleanStr) {
+        return StringUtils.hasText(booleanStr) ? Boolean.parseBoolean(booleanStr) : null;
     }
 }
