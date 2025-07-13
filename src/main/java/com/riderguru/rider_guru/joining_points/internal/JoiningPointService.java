@@ -41,9 +41,9 @@ class JoiningPointService implements GenericService<JoiningPoint> {
 
     @Override
     public void delete(Long id) {
-        log.info("Delete joining date id : {}", id);
+        log.info("Delete joining point id : {}", id);
         joiningPointRepository.deleteById(id);
-        log.info("Delete joining date id : {} complete", id);
+        log.info("Delete joining point id : {} complete", id);
     }
 
     @Override
