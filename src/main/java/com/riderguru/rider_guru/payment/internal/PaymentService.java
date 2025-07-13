@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -56,12 +55,7 @@ class PaymentService implements GenericService<Payment> {
             log.info("No criteria provided");
             return Collections.emptyList();
         }
-        Specification<Payment> spec = null;
-//        try {
-            spec = Specification.where(PaymentSpecification.hasRazorpayId(params.get("razorpayId")));
-//        } catch (ParseException e) {
-//            throw new RuntimeException(e);
-//        }
+        Specification<Payment> spec = Specification.where(PaymentSpecification.hasRazorpayId(params.get("razorpayId")));
         List<Payment> payments = paymentRepository.findAll(spec);
         log.info("Payment found : {}", !payments.isEmpty());
         return payments;
