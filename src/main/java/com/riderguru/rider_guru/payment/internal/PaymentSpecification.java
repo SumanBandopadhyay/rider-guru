@@ -10,4 +10,9 @@ class PaymentSpecification {
                 StringUtils.hasText(razorpayId) ? criteriaBuilder.equal(root.get("razorpayId"), razorpayId) : null;
     }
 
+    public static Specification<Payment> hasUserId(Long userId) {
+        return (root, query, criteriaBuilder) ->
+                userId != null ? criteriaBuilder.equal(root.get("userId"), userId) : null;
+    }
+
 }

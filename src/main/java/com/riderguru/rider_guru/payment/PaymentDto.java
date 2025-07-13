@@ -16,6 +16,9 @@ import java.util.Map;
 public class PaymentDto {
     private Long id;
 
+    @JsonProperty("user_id")
+    private Long userId;
+
     @JsonProperty("amount")
     private Integer amount;
 

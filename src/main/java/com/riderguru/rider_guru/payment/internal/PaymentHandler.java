@@ -33,6 +33,8 @@ class PaymentHandler implements PaymentsAPI {
         Map<String, Object> razorpayPaymentLinkRequest = razorpayMapper.fromPaymentRequest(savedPaymentRequest);
         Map<String, Object> razorpayPaymentLinkResponse = razorpayAdapter.createPaymentLink(razorpayPaymentLinkRequest);
         PaymentDto razorpayResponse = razorpayMapper.fromRazorpayResponse(razorpayPaymentLinkResponse);
+        razorpayResponse.setId(savedPaymentRequest.getId());
+        razorpayResponse.setUserId(savedPaymentRequest.getUserId());
         PaymentDto savedRazorpayResponse = paymentMapper.toDto(paymentService.save(paymentMapper.toEntity(razorpayResponse)));
         return ResponseEntity.ok(savedRazorpayResponse);
     }

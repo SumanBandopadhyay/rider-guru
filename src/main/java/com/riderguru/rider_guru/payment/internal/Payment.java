@@ -19,6 +19,9 @@ class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "user_id")
+    private Long userId;
+
     private Integer amount;
     private String currency;
     private Boolean acceptPartial;
