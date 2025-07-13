@@ -5,6 +5,8 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import java.time.format.DateTimeFormatter;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -64,13 +66,20 @@ class TripService implements GenericService<Trip> {
         Specification<Trip> spec = Specification.where(TripSpecification.hasTitle(params.get("title")))
                 .and(TripSpecification.hasStartPointName(params.get("startPointName")))
                 .and(TripSpecification.hasEndPointName(params.get("endPointName")))
-                .and(TripSpecification.hasScheduledStartTime(LocalDateTime.parse(params.get("scheduledStartTime"))))
-                .and(TripSpecification.hasActualStartTime(LocalDateTime.parse(params.get("actualStartTime"))))
-                .and(TripSpecification.hasScheduledEndTime(LocalDateTime.parse(params.get("scheduledEndTime"))))
-                .and(TripSpecification.hasActualEndTime(LocalDateTime.parse(params.get("actualEndTime"))))
-                .and(TripSpecification.isActive(Boolean.getBoolean(params.get("isActive"))));
+                .and(TripSpecification.hasScheduledStartTime(parseLocalDateTime(params.get("scheduledStartTime"))))
+                .and(TripSpecification.hasActualStartTime(parseLocalDateTime(params.get("actualStartTime"))))
+                .and(TripSpecification.hasScheduledEndTime(parseLocalDateTime(params.get("scheduledEndTime"))))
+                .and(TripSpecification.hasActualEndTime(parseLocalDateTime(params.get("actualEndTime"))))
+                .and(TripSpecification.isActive(parseBoolean(params.get("isActive"))));
         List<Trip> trips = tripRepository.findAll(spec);
         log.info("Trips found : {}", trips.size());
         return trips;
+    }
+    private LocalDateTime parseLocalDateTime(String dateTimeStr) {
+        return StringUtils.hasText(dateTimeStr) ? LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_DATE_TIME) : null;
+    }
+
+    private Boolean parseBoolean(String booleanStr) {
+        return StringUtils.hasText(booleanStr) ? Boolean.parseBoolean(booleanStr) : null;
     }
 }
