@@ -66,11 +66,11 @@ class TripService implements GenericService<Trip> {
         Specification<Trip> spec = Specification.where(TripSpecification.hasTitle(params.get("title")))
                 .and(TripSpecification.hasStartPointName(params.get("startPointName")))
                 .and(TripSpecification.hasEndPointName(params.get("endPointName")))
-                .and(TripSpecification.hasScheduledStartTime(parseLocalDateTime(params.get("scheduledStartTime"))))
-                .and(TripSpecification.hasActualStartTime(parseLocalDateTime(params.get("actualStartTime"))))
-                .and(TripSpecification.hasScheduledEndTime(parseLocalDateTime(params.get("scheduledEndTime"))))
-                .and(TripSpecification.hasActualEndTime(parseLocalDateTime(params.get("actualEndTime"))))
-                .and(TripSpecification.isActive(parseBoolean(params.get("isActive"))));
+                .and(TripSpecification.hasScheduledStartTime(LocalDateTime.parse(params.get("scheduledStartTime"))))
+                .and(TripSpecification.hasActualStartTime(LocalDateTime.parse(params.get("actualStartTime"))))
+                .and(TripSpecification.hasScheduledEndTime(LocalDateTime.parse(params.get("scheduledEndTime"))))
+                .and(TripSpecification.hasActualEndTime(LocalDateTime.parse(params.get("actualEndTime"))))
+                .and(TripSpecification.isActive(Boolean.parseBoolean(params.get("isActive"))));
         List<Trip> trips = tripRepository.findAll(spec);
         log.info("Trips found : {}", trips.size());
         return trips;
