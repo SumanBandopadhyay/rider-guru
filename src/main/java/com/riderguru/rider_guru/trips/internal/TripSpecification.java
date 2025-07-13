@@ -7,6 +7,11 @@ import java.time.LocalDateTime;
 
 class TripSpecification {
 
+    public static Specification<Trip> hasUserId(Long userId) {
+        return (root, query, criteriaBuilder) ->
+                userId != null ? criteriaBuilder.equal(root.get("userId"), userId) : null;
+    }
+
     public static Specification<Trip> hasTitle(String title) {
         return (root, query, criteriaBuilder) ->
                 StringUtils.hasText(title) ? criteriaBuilder.equal(root.get("title"), title) : null;
