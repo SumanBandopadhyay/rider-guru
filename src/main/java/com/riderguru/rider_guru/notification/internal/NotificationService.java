@@ -2,7 +2,10 @@ package com.riderguru.rider_guru.notification.internal;
 
 import com.riderguru.rider_guru.libs.GenericService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -45,7 +48,7 @@ class NotificationService implements GenericService<Notification> {
     @Override
     public List<Notification> getAll() {
         log.info("Listing all notifications");
-        List<Notification> notifications = notificationRepository.findAll();
+        List<Notification> notifications = notificationRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
         log.info("Total notifications : {}", notifications.size());
         return notifications;
     }
@@ -57,7 +60,22 @@ class NotificationService implements GenericService<Notification> {
             log.info("No criteria provided");
             return Collections.emptyList();
         }
-        // No specific filtering implemented, returning all notifications
-        return notificationRepository.findAll();
+        Long userId = parseLong(params.get("userId"));
+        NotificationStatus status = parseStatus(params.get("status"));
+
+        Specification<Notification> spec = Specification.where(NotificationSpecification.hasUserId(userId))
+                .and(NotificationSpecification.hasStatus(status));
+
+        List<Notification> notifications = notificationRepository.findAll(spec, Sort.by(Sort.Direction.DESC, "createdAt"));
+        log.info("Notifications found : {}", notifications.size());
+        return notifications;
+    }
+
+    private Long parseLong(String value) {
+        return StringUtils.hasText(value) ? Long.parseLong(value) : null;
+    }
+
+    private NotificationStatus parseStatus(String value) {
+        return StringUtils.hasText(value) ? NotificationStatus.valueOf(value.toUpperCase()) : null;
     }
 }

@@ -11,4 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class NotificationDto {
     private Long id;
+    private Long userId;
+    private String message;
+    private String status;
+    private java.time.LocalDateTime createdAt;
 }
