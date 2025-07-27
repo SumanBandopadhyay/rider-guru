@@ -57,10 +57,10 @@ public class JoiningPointsGatewayHandler {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteJoiningPoints(@RequestParam("joining-point-id") Long joiningPointId) {
+    public ResponseEntity<JoiningPointsDto> deleteJoiningPoints(@RequestParam("joining-point-id") Long joiningPointId) {
         logger.info("Deleting joining point with id: {}", joiningPointId);
-        ResponseEntity<Void> response = joiningPointsAPI.delete(joiningPointId);
-        logger.info("Joining point deletion finished with status: {}", response.getStatusCode());
+        ResponseEntity<JoiningPointsDto> response = joiningPointsAPI.delete(joiningPointId);
+        logger.info("Joining point deletion finished with status: {} and body: {}", response.getStatusCode(), response.getBody());
         return response;
     }
 }

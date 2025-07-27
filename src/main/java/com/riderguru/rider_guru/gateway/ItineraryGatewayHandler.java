@@ -40,7 +40,7 @@ public class ItineraryGatewayHandler {
     }
 
     @GetMapping("/query")
-    public ResponseEntity<List<ItineraryDto>> queryItinerary(@RequestParam(required = false) Map<String, String> params) {
+    public ResponseEntity<List<ItineraryDto>> queryItineraries(@RequestParam(required = false) Map<String, String> params) {
         logger.info("Querying itinerary with params: {}", params);
         ResponseEntity<List<ItineraryDto>> response = itineraryAPI.query(params);
         logger.info("Itinerary query completed with status: {} and result count: {}", response.getStatusCode(),
@@ -49,7 +49,7 @@ public class ItineraryGatewayHandler {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<ItineraryDto>> getAllItinerary() {
+    public ResponseEntity<List<ItineraryDto>> getAllItineraries() {
         logger.info("Fetching all itineraries");
         ResponseEntity<List<ItineraryDto>> response = itineraryAPI.getAll();
         logger.info("Fetched {} itineraries", response.getBody() != null ? response.getBody().size() : 0);
@@ -57,10 +57,10 @@ public class ItineraryGatewayHandler {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteItinerary(@RequestParam("itinerary-id") Long itineraryId) {
+    public ResponseEntity<ItineraryDto> deleteItinerary(@RequestParam("itinerary-id") Long itineraryId) {
         logger.info("Deleting itinerary with id: {}", itineraryId);
-        ResponseEntity<Void> response = itineraryAPI.delete(itineraryId);
-        logger.info("Itinerary deletion completed with status: {}", response.getStatusCode());
+        ResponseEntity<ItineraryDto> response = itineraryAPI.delete(itineraryId);
+        logger.info("Itinerary deletion completed with status: {} and body: {}", response.getStatusCode(), response.getBody());
         return response;
     }
 }
