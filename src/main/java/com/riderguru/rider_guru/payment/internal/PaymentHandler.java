@@ -9,6 +9,12 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Handles payment related API calls.
+ *
+ * <p>Interacts with {@link PaymentService} and external Razorpay integration
+ * while logging each call for visibility.</p>
+ */
 @Slf4j
 @Component
 class PaymentHandler implements PaymentsAPI {
@@ -27,6 +33,7 @@ class PaymentHandler implements PaymentsAPI {
 
     @Override
     public ResponseEntity<PaymentDto> create(PaymentDto paymentDto) {
+        log.info("Creating payment request for userId: {}", paymentDto.getUserId());
         paymentDto.setStatus("requested");
         Payment saved = paymentService.save(paymentMapper.toEntity(paymentDto));
         PaymentDto savedPaymentRequest = paymentMapper.toDto(saved);
@@ -36,14 +43,18 @@ class PaymentHandler implements PaymentsAPI {
         razorpayResponse.setId(savedPaymentRequest.getId());
         razorpayResponse.setUserId(savedPaymentRequest.getUserId());
         PaymentDto savedRazorpayResponse = paymentMapper.toDto(paymentService.save(paymentMapper.toEntity(razorpayResponse)));
+        log.info("Payment request created with id: {}", savedRazorpayResponse.getId());
         return ResponseEntity.ok(savedRazorpayResponse);
     }
 
     @Override
     public ResponseEntity<PaymentDto> getById(Long id) {
-        return paymentService.getById(id)
+        log.info("Fetching payment with id: {}", id);
+        ResponseEntity<PaymentDto> response = paymentService.getById(id)
                 .map(payment -> ResponseEntity.ok(paymentMapper.toDto(payment)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
+        log.info("Fetch payment id {} status: {}", id, response.getStatusCode());
+        return response;
     }
 
     @Override
@@ -58,10 +69,13 @@ class PaymentHandler implements PaymentsAPI {
 
     @Override
     public ResponseEntity<List<PaymentDto>> query(Map<String, String> params) {
-        return ResponseEntity.ok(paymentService.query(params)
+        log.info("Query payments with params: {}", params);
+        ResponseEntity<List<PaymentDto>> response = ResponseEntity.ok(paymentService.query(params)
                 .stream()
                 .map(paymentMapper::toDto)
                 .toList());
+        log.info("Query returned {} payments", response.getBody() != null ? response.getBody().size() : 0);
+        return response;
     }
 
     @Override

@@ -13,6 +13,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Service class for managing User entities.
+ * Provides CRUD operations and complex queries.
+ * Logs each operation for better observability.
+ */
 @Transactional
 @Slf4j
 @Service
@@ -20,45 +25,84 @@ class UserService implements GenericService<User> {
 
     private final UserRepository userRepository;
 
+    /**
+     * Constructs a UserService with the provided repository.
+     *
+     * @param userRepository repository used to interact with the database
+     */
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Saves a user to the database.
+     *
+     * @param user the user to save
+     * @return the saved user
+     */
     @Override
     public User save(User user) {
-        log.info("Save user : {}", user.getName());
+        log.info("Saving user with name: {}", user.getName());
         User savedUser = userRepository.save(user);
-        log.info("Saved user id : {}", user.getId());
+        log.info("User saved successfully with id: {}", savedUser.getId());
         return savedUser;
     }
 
+    /**
+     * Retrieves a user by its identifier.
+     *
+     * @param id the user identifier
+     * @return an Optional containing the user if found, empty otherwise
+     */
     @Override
     public Optional<User> getById(Long id) {
-        log.info("User check for id : {}", id);
+        log.info("Retrieving user with id: {}", id);
         Optional<User> optionalUser = userRepository.findById(id);
-        log.info("User found for id {} : {}", id, optionalUser.isPresent());
+        log.info("User retrieval for id {} resulted in: {}", id, optionalUser.isPresent());
         return optionalUser;
     }
 
+    /**
+     * Deletes a user by its identifier.
+     *
+     * @param id the user identifier
+     */
     @Override
     public void delete(Long id) {
-        log.info("Delete user id : {}", id);
+        log.info("Deleting user with id: {}", id);
         userRepository.deleteById(id);
-        log.info("Delete of user id : {} complete", id);
+        log.info("Deletion complete for user id: {}", id);
     }
 
+    /**
+     * Retrieves all users from the database.
+     *
+     * @return list of all users
+     */
     @Override
     public List<User> getAll() {
-        return userRepository.findAll();
+        log.info("Retrieving all users");
+        List<User> users = userRepository.findAll();
+        log.info("Retrieved {} users", users.size());
+        return users;
     }
 
+    /**
+     * Queries users based on provided parameters.
+     * Supported parameters include email, name, mobileNumber, isEmailVerified, dob, profileImage,
+     * sosEmergencyContact, isActive and isPremium.
+     *
+     * @param params map of query parameters
+     * @return list of users matching the criteria
+     */
     @Override
     public List<User> query(Map<String, String> params) {
-        log.info("User query : {}", params.toString());
+        log.info("Querying users with parameters: {}", params);
         if (params.isEmpty()) {
-            log.info("No criteria provided");
+            log.info("No criteria provided for user query");
             return Collections.emptyList();
         }
+
         Specification<User> spec = null;
         try {
             spec = Specification.where(UserSpecification.hasEmail(params.get("email")))
@@ -71,10 +115,12 @@ class UserService implements GenericService<User> {
                     .and(UserSpecification.isActive(Boolean.parseBoolean(params.get("isActive"))))
                     .and(UserSpecification.isPremium(Boolean.parseBoolean(params.get("isPremium"))));
         } catch (ParseException e) {
+            log.error("Error parsing date during user query", e);
             throw new RuntimeException(e);
         }
+
         List<User> users = userRepository.findAll(spec);
-        log.info("User found : {}", !users.isEmpty());
+        log.info("Found {} users for provided criteria", users.size());
         return users;
     }
 }
