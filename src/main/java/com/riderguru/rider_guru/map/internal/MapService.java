@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Slf4j
 @Service
-public class MapService {
+class MapService {
 
     private final MapAdapter mapAdapter;
 
@@ -23,7 +23,7 @@ public class MapService {
      *
      * @param mapAdapter the map adapter used to perform map operations
      */
-    public MapService(MapAdapter mapAdapter) {
+MapService(MapAdapter mapAdapter) {
         this.mapAdapter = mapAdapter;
     }
 
@@ -31,10 +31,11 @@ public class MapService {
      * Searches for places that match the given search keyword.
      *
      * @param searchKeyword the search text used to find places
-     * @return list of place results matching the search keyword
+    
      */
-    public List<PlaceDto> searchPlace(String searchKeyword) {
-        log.info("Searching for places with keyword: {}", searchKeyword);
+    
+        List<PlaceDto> searchPlace(String searchKeyword) {
+log.info("Searching for places with keyword: {}", searchKeyword);
         List<PlaceDto> placeList = mapAdapter.searchPlace(searchKeyword);
         log.info("Found {} places for keyword: {}", placeList.size(), searchKeyword);
         return placeList;
@@ -45,8 +46,8 @@ public class MapService {
      *
      * @param placeId the Google Place ID for which to retrieve location details
      * @return the location details for the specified place ID
-     */
-    public LocationDto locationForPlaceId(String placeId) {
+
+LLocationDto locationForPlaceId(String placeId) {
         log.info("Retrieving location for placeId: {}", placeId);
         try {
             LocationDto location = mapAdapter.locationForPlaceId(placeId);
@@ -67,7 +68,7 @@ public class MapService {
      * @param destLng   longitude of the destination
      * @return a string representing the route details
      */
-    public String getRoute(double originLat, double originLng, double destLat, double destLng) {
+    String getRoute(double originLat, double originLng, double destLat, double destLng) {
         log.info("Getting route from ({}, {}) to ({}, {})", originLat, originLng, destLat, destLng);
         String route = mapAdapter.getRoute(originLat, originLng, destLat, destLng);
         log.info("Route retrieved between origin ({}, {}) and destination ({}, {})", originLat, originLng, destLat, destLng);
