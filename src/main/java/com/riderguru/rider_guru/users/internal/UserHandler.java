@@ -9,6 +9,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Implementation of {@link UsersAPI} that delegates to {@link UserService}.
+ * Logs each request to aid in debugging user operations.
+ */
 @Slf4j
 @Component
 class UserHandler implements UsersAPI {
@@ -23,43 +27,59 @@ class UserHandler implements UsersAPI {
 
     @Override
     public ResponseEntity<UserDto> create(UserDto userDto) {
+        log.info("Creating user with mobileNumber: {}", userDto.getMobileNumber());
         userDto.setIsActive(false);
         userDto.setIsPremium(false);
         userDto.setIsEmailVerified(false);
-        return ResponseEntity.ok(userMapper.toDto(userService.save(userMapper.toEntity(userDto))));
+        ResponseEntity<UserDto> response = ResponseEntity.ok(
+                userMapper.toDto(userService.save(userMapper.toEntity(userDto))));
+        log.info("User created with id: {}", response.getBody() != null ? response.getBody().getId() : null);
+        return response;
     }
 
     @Override
     public ResponseEntity<UserDto> getById(Long id) {
-        return userService.getById(id)
+        log.info("Fetching user with id: {}", id);
+        ResponseEntity<UserDto> response = userService.getById(id)
                 .map(user -> ResponseEntity.ok(userMapper.toDto(user)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
+        log.info("Fetch user id {} status: {}", id, response.getStatusCode());
+        return response;
     }
 
     @Override
     public ResponseEntity<List<UserDto>> getAll() {
-        return ResponseEntity.ok(userService.getAll()
+        log.info("Fetching all users");
+        ResponseEntity<List<UserDto>> response = ResponseEntity.ok(userService.getAll()
                 .stream()
                 .map(userMapper::toDto)
                 .toList());
+        log.info("Fetched {} users", response.getBody() != null ? response.getBody().size() : 0);
+        return response;
     }
 
     @Override
     public ResponseEntity<UserDto> delete(Long id) {
-        return userService.getById(id)
+        log.info("Deleting user with id: {}", id);
+        ResponseEntity<UserDto> response = userService.getById(id)
                 .map(user -> {
                     userService.delete(user.getId());
                     return ResponseEntity.ok(userMapper.toDto(user));
                 })
                 .orElseGet(() -> ResponseEntity.notFound().build());
+        log.info("Delete user id {} status: {}", id, response.getStatusCode());
+        return response;
     }
 
     @Override
     public ResponseEntity<List<UserDto>> query(Map<String, String> params) {
-        return ResponseEntity.ok(userService.query(params)
+        log.info("Query users with params: {}", params);
+        ResponseEntity<List<UserDto>> response = ResponseEntity.ok(userService.query(params)
                 .stream()
                 .map(userMapper::toDto)
                 .toList());
+        log.info("Query returned {} users", response.getBody() != null ? response.getBody().size() : 0);
+        return response;
     }
 
     @Override
