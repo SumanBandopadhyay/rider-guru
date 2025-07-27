@@ -38,7 +38,7 @@ public class TripsGatewayHandler {
     @PostMapping("/create")
     public ResponseEntity<TripDto> createTrip(@Valid @RequestBody TripDto tripDto) {
         logger.info("Received request to create trip: {}", tripDto);
-        ResponseEntity<TripDto> response = tripsAPI.createTrip(tripDto);
+        ResponseEntity<TripDto> response = tripsAPI.create(tripDto);
         logger.info("Response from createTrip: status={}, body={}", response.getStatusCode(), response.getBody());
         return response;
     }
@@ -52,7 +52,7 @@ public class TripsGatewayHandler {
     @PostMapping("/update")
     public ResponseEntity<TripDto> updateTrip(@Valid @RequestBody TripDto tripDto) {
         logger.info("Received request to update trip: {}", tripDto);
-        ResponseEntity<TripDto> response = tripsAPI.updateTrip(tripDto);
+        ResponseEntity<TripDto> response = tripsAPI.update(tripDto);
         logger.info("Response from updateTrip: status={}, body={}", response.getStatusCode(), response.getBody());
         return response;
     }
@@ -65,7 +65,7 @@ public class TripsGatewayHandler {
     @GetMapping("/all")
     public ResponseEntity<List<TripDto>> getAllTrips() {
         logger.info("Received request to get all trips");
-        ResponseEntity<List<TripDto>> response = tripsAPI.getAllTrips();
+        ResponseEntity<List<TripDto>> response = tripsAPI.getAll();
         logger.info("Response from getAllTrips: status={}, body size={}", response.getStatusCode(), response.getBody() != null ? response.getBody().size() : 0);
         return response;
     }
@@ -79,7 +79,7 @@ public class TripsGatewayHandler {
     @PostMapping("/delete")
     public ResponseEntity<Void> deleteTrip(@RequestParam Long tripId) {
         logger.info("Received request to delete trip with id: {}", tripId);
-        ResponseEntity<Void> response = tripsAPI.deleteTrip(tripId);
+        ResponseEntity<Void> response = tripsAPI.delete(tripId);
         logger.info("Response from deleteTrip: status={}", response.getStatusCode());
         return response;
     }
@@ -93,7 +93,7 @@ public class TripsGatewayHandler {
     @GetMapping("/query")
     public ResponseEntity<List<TripDto>> queryTrips(@RequestParam(required = false) Map<String, String> params) {
         logger.info("Received request to query trips with params: {}", params);
-        ResponseEntity<List<TripDto>> response = tripsAPI.queryTrips(params);
+        ResponseEntity<List<TripDto>> response = tripsAPI.query(params);
         logger.info("Response from queryTrips: status={}, body size={}", response.getStatusCode(), response.getBody() != null ? response.getBody().size() : 0);
         return response;
     }
