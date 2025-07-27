@@ -47,14 +47,13 @@ public class MapsGatewayHandler {
     }
 
     @GetMapping("/place/route")
-    public ResponseEntity<List<LocationDto>> getRoute(@RequestParam(value = "origin_lat") double originLat,
-                                                     @RequestParam(value = "origin_lng") double originLng,
-                                                     @RequestParam(value = "dest_lat") double destLat,
-                                                     @RequestParam(value = "dest_lng") double destLng) {
+    public ResponseEntity<String> getRoute(@RequestParam(value = "origin_lat") double originLat,
+                                           @RequestParam(value = "origin_lng") double originLng,
+                                           @RequestParam(value = "dest_lat") double destLat,
+                                           @RequestParam(value = "dest_lng") double destLng) {
         logger.info("Calculating route from ({} , {}) to ({} , {})", originLat, originLng, destLat, destLng);
-        ResponseEntity<List<LocationDto>> response = mapsAPI.getRoute(originLat, originLng, destLat, destLng);
-        logger.info("Route calculation finished with status: {} and {} waypoints", response.getStatusCode(),
-                response.getBody() != null ? response.getBody().size() : 0);
+        ResponseEntity<String> response = mapsAPI.getRoute(originLat, originLng, destLat, destLng);
+        logger.info("Route calculation finished with status: {}", response.getStatusCode());
         return response;
     }
 }

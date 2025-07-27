@@ -57,10 +57,10 @@ public class ItineraryGatewayHandler {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteItinerary(@RequestParam("itinerary-id") Long itineraryId) {
+    public ResponseEntity<ItineraryDto> deleteItinerary(@RequestParam("itinerary-id") Long itineraryId) {
         logger.info("Deleting itinerary with id: {}", itineraryId);
-        ResponseEntity<Void> response = itineraryAPI.delete(itineraryId);
-        logger.info("Itinerary deletion completed with status: {}", response.getStatusCode());
+        ResponseEntity<ItineraryDto> response = itineraryAPI.delete(itineraryId);
+        logger.info("Itinerary deletion completed with status: {} and body: {}", response.getStatusCode(), response.getBody());
         return response;
     }
 }

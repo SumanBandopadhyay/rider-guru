@@ -57,10 +57,10 @@ public class UsersGatewayHandler {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteUser(@RequestParam("userid") Long userId) {
+    public ResponseEntity<UserDto> deleteUser(@RequestParam("userid") Long userId) {
         logger.info("Deleting user with id: {}", userId);
-        ResponseEntity<Void> response = usersAPI.delete(userId);
-        logger.info("User deletion finished with status: {}", response.getStatusCode());
+        ResponseEntity<UserDto> response = usersAPI.delete(userId);
+        logger.info("User deletion finished with status: {} and body: {}", response.getStatusCode(), response.getBody());
         return response;
     }
 }

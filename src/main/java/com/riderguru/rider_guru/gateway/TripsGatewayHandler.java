@@ -77,10 +77,10 @@ public class TripsGatewayHandler {
      * @return deletion response entity
      */
     @PostMapping("/delete")
-    public ResponseEntity<Void> deleteTrip(@RequestParam Long tripId) {
+    public ResponseEntity<TripDto> deleteTrip(@RequestParam Long tripId) {
         logger.info("Received request to delete trip with id: {}", tripId);
-        ResponseEntity<Void> response = tripsAPI.delete(tripId);
-        logger.info("Response from deleteTrip: status={}", response.getStatusCode());
+        ResponseEntity<TripDto> response = tripsAPI.delete(tripId);
+        logger.info("Response from deleteTrip: status={}, body={}", response.getStatusCode(), response.getBody());
         return response;
     }
 
