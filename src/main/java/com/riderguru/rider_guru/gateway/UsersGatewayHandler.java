@@ -40,7 +40,7 @@ public class UsersGatewayHandler {
     }
 
     @GetMapping("/query")
-    public ResponseEntity<List<UserDto>> getUser(@RequestParam(required = false) Map<String, String> params) {
+    public ResponseEntity<List<UserDto>> queryUsers(@RequestParam(required = false) Map<String, String> params) {
         logger.info("Querying users with params: {}", params);
         ResponseEntity<List<UserDto>> response = usersAPI.query(params);
         logger.info("User query completed with status: {} and result count: {}", response.getStatusCode(),
@@ -57,10 +57,10 @@ public class UsersGatewayHandler {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteUser(@RequestParam("userid") Long userId) {
+    public ResponseEntity<UserDto> deleteUser(@RequestParam("userid") Long userId) {
         logger.info("Deleting user with id: {}", userId);
-        ResponseEntity<Void> response = usersAPI.delete(userId);
-        logger.info("User deletion finished with status: {}", response.getStatusCode());
+        ResponseEntity<UserDto> response = usersAPI.delete(userId);
+        logger.info("User deletion finished with status: {} and body: {}", response.getStatusCode(), response.getBody());
         return response;
     }
 }

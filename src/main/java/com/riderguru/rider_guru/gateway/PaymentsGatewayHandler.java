@@ -38,7 +38,7 @@ public class PaymentsGatewayHandler {
     @PostMapping("/create")
     public ResponseEntity<PaymentDto> createPayment(@Valid @RequestBody PaymentDto paymentDto) {
         logger.info("Received request to create payment: {}", paymentDto);
-        ResponseEntity<PaymentDto> response = paymentsAPI.createPayment(paymentDto);
+        ResponseEntity<PaymentDto> response = paymentsAPI.create(paymentDto);
         logger.info("Response from createPayment: status={}, body={}", response.getStatusCode(), response.getBody());
         return response;
     }
@@ -52,7 +52,7 @@ public class PaymentsGatewayHandler {
     @GetMapping("/query")
     public ResponseEntity<List<PaymentDto>> queryPayments(@RequestParam(required = false) Map<String, String> params) {
         logger.info("Received request to query payments with params: {}", params);
-        ResponseEntity<List<PaymentDto>> response = paymentsAPI.queryPayments(params);
+        ResponseEntity<List<PaymentDto>> response = paymentsAPI.query(params);
         logger.info("Response from queryPayments: status={}, body size={}", response.getStatusCode(), response.getBody() != null ? response.getBody().size() : 0);
         return response;
     }

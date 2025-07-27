@@ -38,9 +38,9 @@ public class NotificationsGatewayHandler {
      * @return A {@link ResponseEntity} wrapping the downstream response.
      */
     @GetMapping("/otp/send")
-    public ResponseEntity<?> sendOtp(@RequestParam("phone-number") String phoneNumber) {
+    public ResponseEntity<String> sendOtp(@RequestParam("phone-number") String phoneNumber) {
         logger.info("Received request to send OTP for phone number: {}", phoneNumber);
-        ResponseEntity<?> response = notificationsAPI.sendOtp(phoneNumber);
+        ResponseEntity<String> response = notificationsAPI.sendOtp(phoneNumber);
         logger.info("Completed sendOtp call for phone number: {} with status {}", phoneNumber, response.getStatusCode());
         return response;
     }
@@ -52,9 +52,9 @@ public class NotificationsGatewayHandler {
      * @return A {@link ResponseEntity} wrapping the downstream response.
      */
     @GetMapping("/otp/verify")
-    public ResponseEntity<?> verifyOtp(@RequestParam("otp") String otp) {
+    public ResponseEntity<Boolean> verifyOtp(@RequestParam("otp") String otp) {
         logger.info("Received request to verify OTP: {}", otp);
-        ResponseEntity<?> response = notificationsAPI.verifyOtp(otp);
+        ResponseEntity<Boolean> response = notificationsAPI.verifyOtp(otp);
         logger.info("Completed verifyOtp call for OTP: {} with status {}", otp, response.getStatusCode());
         return response;
     }
