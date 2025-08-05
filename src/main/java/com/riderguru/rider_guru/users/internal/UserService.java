@@ -90,7 +90,7 @@ class UserService implements GenericService<User> {
     /**
      * Queries users based on provided parameters.
      * Supported parameters include email, name, mobileNumber, isEmailVerified, dob, profileImage,
-     * sosEmergencyContact, isActive and isPremium.
+     * backgroundImage, profileWriteUp, sosEmergencyContact, isActive and isPremium.
      *
      * @param params map of query parameters
      * @return list of users matching the criteria
@@ -111,6 +111,8 @@ class UserService implements GenericService<User> {
                     .and(UserSpecification.isEmailVerified(Boolean.parseBoolean(params.get("isEmailVerified"))))
                     .and(UserSpecification.hasDob(new SimpleDateFormat("yyyy-MM-dd").parse(params.get("dob"))))
                     .and(UserSpecification.hasProfileImage(params.get("profileImage")))
+                    .and(UserSpecification.hasBackgroundImage(params.get("backgroundImage")))
+                    .and(UserSpecification.hasProfileWriteUp(params.get("profileWriteUp")))
                     .and(UserSpecification.hasSosEmergencyContact(params.get("sosEmergencyContact")))
                     .and(UserSpecification.isActive(Boolean.parseBoolean(params.get("isActive"))))
                     .and(UserSpecification.isPremium(Boolean.parseBoolean(params.get("isPremium"))));

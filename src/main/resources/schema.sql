@@ -6,6 +6,8 @@ create table if not exists users (
   mobile_number VARCHAR(15) NOT NULL,
   dob DATE NOT NULL,
   profile_image VARCHAR(100) NULL,
+  background_image VARCHAR(100) NULL,
+  profile_write_up TEXT NULL,
   sos_emergency_contact VARCHAR(15) NULL,
   is_active BINARY NOT NULL,
   is_premium BINARY NOT NULL
