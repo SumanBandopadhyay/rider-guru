@@ -97,6 +97,15 @@ create table if not exists group_members (
   user_id bigint not null
 );
 
+create table if not exists group_join_requests (
+  id serial primary key not null,
+  group_id bigint not null,
+  requester_id bigint not null,
+  requested_user_id bigint not null,
+  status varchar(20) not null,
+  created_at datetime not null
+);
+
 create table if not exists group_messages (
   id serial primary key not null,
   group_id bigint not null,

@@ -10,4 +10,5 @@ public interface GroupsAPI extends GenericAPI<GroupDto> {
     ResponseEntity<List<GroupMemberDto>> getMembers(Long groupId);
     ResponseEntity<GroupMessageDto> postMessage(Long groupId, GroupMessageDto messageDto);
     ResponseEntity<List<GroupMessageDto>> getMessages(Long groupId);
+    ResponseEntity<GroupJoinRequestDto> respondToJoinRequest(Long requestId, Long adminId, Boolean approve);
 }

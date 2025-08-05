@@ -3,6 +3,7 @@ package com.riderguru.rider_guru.groups.internal;
 import com.riderguru.rider_guru.groups.GroupDto;
 import com.riderguru.rider_guru.groups.GroupMemberDto;
 import com.riderguru.rider_guru.groups.GroupMessageDto;
+import com.riderguru.rider_guru.groups.GroupJoinRequestDto;
 import com.riderguru.rider_guru.libs.GenericMapper;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +36,7 @@ class GroupMapper implements GenericMapper<Group, GroupDto> {
                 .id(e.getId())
                 .groupId(e.getGroupId())
                 .userId(e.getUserId())
+                .requesterId(null)
                 .build();
     }
 
@@ -65,6 +67,30 @@ class GroupMapper implements GenericMapper<Group, GroupDto> {
                 .groupId(d.getGroupId())
                 .senderId(d.getSenderId())
                 .message(d.getMessage())
+                .createdAt(d.getCreatedAt())
+                .build();
+    }
+
+    GroupJoinRequestDto toDto(GroupJoinRequest e) {
+        if (e == null) return null;
+        return GroupJoinRequestDto.builder()
+                .id(e.getId())
+                .groupId(e.getGroupId())
+                .requesterId(e.getRequesterId())
+                .requestedUserId(e.getRequestedUserId())
+                .status(e.getStatus() != null ? e.getStatus().name() : null)
+                .createdAt(e.getCreatedAt())
+                .build();
+    }
+
+    GroupJoinRequest toEntity(GroupJoinRequestDto d) {
+        if (d == null) return null;
+        return GroupJoinRequest.builder()
+                .id(d.getId())
+                .groupId(d.getGroupId())
+                .requesterId(d.getRequesterId())
+                .requestedUserId(d.getRequestedUserId())
+                .status(d.getStatus() != null ? GroupJoinRequestStatus.valueOf(d.getStatus()) : null)
                 .createdAt(d.getCreatedAt())
                 .build();
     }
