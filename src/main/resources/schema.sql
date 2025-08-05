@@ -82,3 +82,23 @@ CREATE TABLE if not exists payments (
     whatsapp_link BOOLEAN,
     razorpay_id VARCHAR(255)
 );
+
+create table if not exists groups (
+  id serial primary key not null,
+  name varchar(100) not null,
+  admin_id bigint not null
+);
+
+create table if not exists group_members (
+  id serial primary key not null,
+  group_id bigint not null,
+  user_id bigint not null
+);
+
+create table if not exists group_messages (
+  id serial primary key not null,
+  group_id bigint not null,
+  sender_id bigint not null,
+  message text not null,
+  created_at datetime not null
+);
