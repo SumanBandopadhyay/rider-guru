@@ -2,6 +2,7 @@ package com.riderguru.rider_guru.users.internal;
 
 import com.riderguru.rider_guru.users.UserDto;
 import com.riderguru.rider_guru.users.UsersAPI;
+import com.riderguru.rider_guru.libs.exceptions.GenericException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -84,6 +85,16 @@ class UserHandler implements UsersAPI {
 
     @Override
     public ResponseEntity<UserDto> update(UserDto userDto) {
-        return null;
+        log.info("Updating user id: {}", userDto.getId());
+        userService.getById(userDto.getId())
+                .orElseThrow(() -> {
+                    String message = "User ID " + userDto.getId() + " not present";
+                    log.error(message);
+                    return new GenericException(message);
+                });
+        ResponseEntity<UserDto> response = ResponseEntity.ok(
+                userMapper.toDto(userService.save(userMapper.toEntity(userDto))));
+        log.info("Update user id {} status: {}", userDto.getId(), response.getStatusCode());
+        return response;
     }
 }

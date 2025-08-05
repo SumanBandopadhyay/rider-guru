@@ -37,6 +37,16 @@ class UserSpecification {
                 StringUtils.hasText(profileImage) ? criteriaBuilder.equal(root.get("profileImage"), profileImage) : null;
     }
 
+    public static Specification<User> hasBackgroundImage(String backgroundImage) {
+        return (root, query, criteriaBuilder) ->
+                StringUtils.hasText(backgroundImage) ? criteriaBuilder.equal(root.get("backgroundImage"), backgroundImage) : null;
+    }
+
+    public static Specification<User> hasProfileWriteUp(String profileWriteUp) {
+        return (root, query, criteriaBuilder) ->
+                StringUtils.hasText(profileWriteUp) ? criteriaBuilder.equal(root.get("profileWriteUp"), profileWriteUp) : null;
+    }
+
     public static Specification<User> hasSosEmergencyContact(String sosEmergencyContact) {
         return (root, query, criteriaBuilder) ->
                 StringUtils.hasText(sosEmergencyContact) ? criteriaBuilder.equal(root.get("sosEmergencyContact"), sosEmergencyContact) : null;

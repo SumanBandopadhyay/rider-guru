@@ -30,6 +30,8 @@ class UserServiceIntegrationTest {
                 .mobileNumber("1234567890")
                 .dob(new Date())
                 .profileImage("img")
+                .backgroundImage("bg")
+                .profileWriteUp("About me")
                 .sosEmergencyContact("911")
                 .isActive(true)
                 .isPremium(false)
@@ -40,8 +42,13 @@ class UserServiceIntegrationTest {
 
         Optional<User> found = userService.getById(saved.getId());
         assertTrue(found.isPresent());
+        assertEquals("bg", found.get().getBackgroundImage());
+        assertEquals("About me", found.get().getProfileWriteUp());
 
-        Map<String, String> params = Map.of("email", "john@example.com");
+        Map<String, String> params = Map.of(
+                "email", "john@example.com",
+                "profileWriteUp", "About me",
+                "backgroundImage", "bg");
         List<User> result = userService.query(params);
         assertEquals(1, result.size());
         assertEquals(saved.getId(), result.get(0).getId());

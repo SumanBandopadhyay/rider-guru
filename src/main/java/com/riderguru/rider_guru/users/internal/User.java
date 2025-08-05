@@ -30,6 +30,10 @@ class User {
         private Date dob;
         @Column(name = "profile_image")
         private String profileImage;
+        @Column(name = "background_image")
+        private String backgroundImage;
+        @Column(name = "profile_write_up")
+        private String profileWriteUp;
         @Column(name = "sos_emergency_contact")
         private String sosEmergencyContact;
         @Column(name = "is_active")

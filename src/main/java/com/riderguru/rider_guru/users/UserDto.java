@@ -24,6 +24,8 @@ public class UserDto {
         @NotNull(message = "Date of Birth needs to be entered")
         private Date dob;
         private String profileImage;
+        private String backgroundImage;
+        private String profileWriteUp;
         private String sosEmergencyContact;
         private Boolean isActive;
         private Boolean isPremium;
