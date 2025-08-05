@@ -51,4 +51,12 @@ public class GroupsGatewayHandler {
         logger.info("Fetching messages for group {}", groupId);
         return groupsAPI.getMessages(groupId);
     }
+
+    @PostMapping("/requests/{requestId}/response")
+    public ResponseEntity<GroupJoinRequestDto> respondToRequest(@PathVariable Long requestId,
+                                                                @RequestParam("admin-id") Long adminId,
+                                                                @RequestParam("approve") Boolean approve) {
+        logger.info("Admin {} responding {} to join request {}", adminId, approve, requestId);
+        return groupsAPI.respondToJoinRequest(requestId, adminId, approve);
+    }
 }

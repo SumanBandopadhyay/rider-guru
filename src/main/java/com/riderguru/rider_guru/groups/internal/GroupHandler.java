@@ -23,6 +23,8 @@ class GroupHandler implements GroupsAPI {
     public ResponseEntity<GroupDto> create(GroupDto groupDto) {
         log.info("Creating group: {}", groupDto.getName());
         Group saved = groupService.save(groupMapper.toEntity(groupDto));
+        // Add the creator as the first member of the group
+        groupService.addMember(saved.getId(), saved.getAdminId(), saved.getAdminId());
         return ResponseEntity.ok(groupMapper.toDto(saved));
     }
 
@@ -63,8 +65,12 @@ class GroupHandler implements GroupsAPI {
     @Override
     public ResponseEntity<GroupMemberDto> addMember(Long groupId, GroupMemberDto memberDto) {
         memberDto.setGroupId(groupId);
-        GroupMember saved = groupService.addMember(groupMapper.toEntity(memberDto));
-        return ResponseEntity.ok(groupMapper.toDto(saved));
+        GroupService.MemberAdditionResult result = groupService.addMember(groupId, memberDto.getUserId(), memberDto.getRequesterId());
+        if (result.member() != null) {
+            return ResponseEntity.ok(groupMapper.toDto(result.member()));
+        }
+        // Request created for admin approval
+        return ResponseEntity.accepted().build();
     }
 
     @Override
@@ -86,5 +92,11 @@ class GroupHandler implements GroupsAPI {
         List<GroupMessageDto> messages = groupService.getMessages(groupId)
                 .stream().map(groupMapper::toDto).toList();
         return ResponseEntity.ok(messages);
+    }
+
+    @Override
+    public ResponseEntity<GroupJoinRequestDto> respondToJoinRequest(Long requestId, Long adminId, Boolean approve) {
+        GroupJoinRequest handled = groupService.handleJoinRequest(requestId, adminId, approve);
+        return ResponseEntity.ok(groupMapper.toDto(handled));
     }
 }
